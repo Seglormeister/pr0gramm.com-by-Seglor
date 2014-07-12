@@ -15,7 +15,7 @@ Integrierte Veränderungen:
 - (BETA) Weitere Optionsauswahl "Optik" unter den Einstellungen
     - Seitenbreite verändern
     - Vollbild Option
-    - 
+
 Anmerkung: "Optik" Optionen sind noch nicht ausgereift!
 
 
