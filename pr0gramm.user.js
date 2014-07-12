@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name        Pr0gramm.com by Seglor
-// @namespace   http://userscripts.org/scripts/show/486514
+// @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
+// @author		Seglormeister
 // @description Improve das Pr0gramm
 // @include     http://pr0gramm.com/*
 // @version     1.4
 // @grant       none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
-// @updateURL   http://userscripts.org/scripts/source/486514.user.js
+// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm.user.js
 // ==/UserScript==
 
 (function() {
-console.log()
   
 
 var wheelLast = 0;
