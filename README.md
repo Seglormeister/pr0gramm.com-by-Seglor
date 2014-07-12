@@ -24,12 +24,12 @@ Anmerkung: "Optik" Optionen sind noch nicht ausgereift!
 
 INSTALLATION
 
-Firefox:
-    Addon "Greasemonkey" benötigt
-    
-Chrome:
-    Addon "Tampermonkey" benötigt
+1. Addon für euren Brauser besorgen
+Firefox: Addon "Greasemonkey" benötigt
+Chrome: Addon "Tampermonkey" benötigt
 
+2. Klick auf den Raw Link zum Userscript, Installationsfenster erscheint direkt
+Raw Link: https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm.user.js
 
 
 
