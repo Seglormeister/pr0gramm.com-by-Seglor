@@ -31,7 +31,7 @@ Chrome: Addon "Tampermonkey" benötigt
 2. Klick auf den Raw Link zum Userscript, Installationsfenster erscheint direkt
 Raw Link: https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm.user.js
 
-
+3. Updates bei neuen Versionen erfolgen automatisch
 
 
 
