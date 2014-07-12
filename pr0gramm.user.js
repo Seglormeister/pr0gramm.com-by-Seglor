@@ -52,12 +52,12 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 290px; le
     }
   
     
-     
+/*   
 $(function()
 {
 	$('.item-comments').jScrollPane();
 });
-
+*/
 
  
 function update(e) {
