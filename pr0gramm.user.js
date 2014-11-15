@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name        Pr0gramm.com by Seglor
+// @name        pr0gramm.com Dünn by Seglor
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author		Seglormeister
-// @description Improve das Pr0gramm
+// @author	Seglormeister
+// @description Improve pr0gramm mit schmaler Ansicht
 // @include     http://pr0gramm.com/*
-// @version     1.4
+// @version     1.5
 // @grant       none
-// @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm.user.js
 // ==/UserScript==
 
@@ -14,13 +14,17 @@
   
 
 var wheelLast = 0;
-var design = '1';
 /****/// CSS und Kommentarbox links
     
-    
-var css = '#upload-form input[type="submit"] { position:relative; top: 290px; left: 350px; }'+
-    '.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
-'.comments-large-rectangle { height:auto; position:px; width:280px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } #footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} #zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
+
+		var high = $(window).height()-51;
+		var highitemimage = $(window).height()-200;
+    var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
+	'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
+	'.comments-large-rectangle { height:auto; position:px; width:280px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
+	'#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
+	'#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
+				
 '.ui-widget-content {border: 1px solid #AAAAAA;color: #222222;}'+
 '.ui-slider { position: relative; text-align: left;}'+
 '.ui-slider-horizontal { height: 0.8em;}'+
@@ -31,8 +35,16 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 290px; le
 '.ui-slider-horizontal .ui-slider-handle { margin-left: -0.6em; top: -0.3em;}'+
 '.ui-slider .ui-slider-handle { cursor: default; height: 1.2em; position: absolute; width: 1.2em; z-index: 2;}'+
 '#slider { float: left; clear: left; width: 300px; margin: 30px 15px 5px; }#slider .ui-slider-range { background: #EE4D2E; } #slider .ui-slider-handle { border-color: #EE4D2E; }'+
-'@media screen and (max-width:1400px){ div#head {margin: 0 0 0 25% !important;} div#page {margin: 0 0 0 25% !important;} .item-comments {width: 24% !important;}} #head { z-index:200; } #stream-next, #stream-prev { z-index:122; } .item-image{max-height:460px;} .item-comments {\n  position: fixed !important;\n  top: 0;\n  left: 0;\n \n  width: 300px;\n  height: 100vh;\n  max-height: 100vh;\n  overflow-y: auto;\n  overflow-x: hidden;\n}\n \n.item-comments textarea.comment {\n  resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}';
-
+'@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+
+				
+'div#page {margin: 0 0 0 0 !important;} .item-comments {width: 24% !important;}} '+
+'#head { z-index:200; } #stream-next, #stream-prev { z-index:122; top:350px; } '+
+'.item-image{max-height:460px;} .item-comments {\n  position: fixed !important;\n  '+
+'top: 0;\n  left: 0;\n \n  width: 300px;\n  height: 100vh;\n  max-height: 100vh;\n  '+
+'overflow-y: auto;\n  overflow-x: hidden;\n}\n \n.item-comments textarea.comment {\n  '+
+'resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    '+
+'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}';
+	
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
     } else if (typeof PRO_addStyle != "undefined") {
@@ -50,14 +62,6 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 290px; le
             document.documentElement.appendChild(node);
         }
     }
-  
-    
-/*   
-$(function()
-{
-	$('.item-comments').jScrollPane();
-});
-*/
 
  
 function update(e) {
@@ -73,13 +77,13 @@ function update(e) {
 		var pageElement = document.getElementById('bild');
 		positionX += pageElement.offsetLeft;        
         positionY += pageElement.offsetTop;
-		//alert($(window).height());      	
+	//alert(positionX+' '+positionY);    	
         window.scrollTo(positionX, positionY-130); 
 	}
 }
 
 
-	setInterval(function() {	
+	setInterval(function() {
 		if ($('.item-image').length) {
 			/*
 			var vids = document.getElementsByTagName("video");
@@ -102,8 +106,8 @@ function update(e) {
 			var pageElement = document.getElementById('bild');
 			positionX += pageElement.offsetLeft;        
 			positionY += pageElement.offsetTop;
-			//alert($(window).height());      	
-			window.scrollTo(positionX, positionY-130); 
+			//alert(positionX+' '+positionY);
+				window.scrollTo(positionX, positionY-130); 
 		}else{
 			var stil = document.getElementsByTagName('html')[0];
 			stil.style.overflow='visible';
@@ -111,107 +115,6 @@ function update(e) {
 		
     }, 200);
 	
-
-
-
-// Breiteneinstellung in Settings
-
-function refreshdas() {
-    if (design == '1') {
-        var weite = $("#slider").slider("value");
-        $("#page").css( "width", weite+"px");
-        $("#head").css( "width", weite+"px");
-        var proreihe = weite/128;
-        var treshold = 0.55* $(window).width();
-
-        document.getElementById("zahlbreite").innerHTML = weite+' Pixel';
-        if (weite > treshold) {
-            $(".item-comments").css( "top", "50px");
-        }else{
-            $(".item-comments").css( "top", "0");
-        }
-    }
-}
-
-function changedesign() {
-    if (document.getElementById("design") && design == '1') {
-        var elem = document.getElementById('design');
-        elem.parentNode.removeChild(elem);
-    }else{
-
-            var css = '#page { width: 100% !important }'+
-                      '#head { width: 100% !important }'+
-                      '.comment-foot { width: 260px !important }'+
-                      '.item-comments { top: 48px !important; width: 312px !important;}' +
-                                '.item-container-content { margin-top: 20px !important }'+
-                                'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: absolute !important; height: 100% !important; width: 100% !important; }'+
-                                '.stream-row { clear: none !important; margin-left: 0 !important; }'+
-                                '#main-view { max-width: 100% !important; width: 100% !important; }'+
-                                '.user-info { margin: 20px 30px 0 0 !important; }'+
-                                '#pr0gramm-logo { margin-left: 15px !important; }'+
-                                '.item-pointer { display: none !important; }'+
-                     'div.item-tags { padding: 4px 0 8px 20% !important;}'+
-                     'div.item-vote { left: 345px;)';
-        if (!document.getElementById("design") && design == '2') {
-            var node = document.createElement("style");
-                node.type = "text/css";
-                node.id = "design";
-                node.appendChild(document.createTextNode(css));
-                var heads = document.getElementsByTagName("head");
-                if (heads.length > 0) {
-                    heads[0].appendChild(node); 
-                } else {
-                    document.documentElement.appendChild(node);
-                }
-        }
-    }
-}
-
-    
-// Settings öffnen
-$('#settings-link').click(function() {
-	setInterval(function () {
-		
-		if ($("div.overlay-tabs").length && !$("#settings-optik").length) {
-			$('div.overlay-tabs').append('<span id="settings-optik" class="link tab">Optik</span>');		
-		}
-		var valus = parseInt(document.getElementById("page").style.width);
-		$( "#slider" ).slider( "value", valus );
-			$('span#settings-optik').click(function() {
-				loaded = false;
-				$('#settings-optik').attr('class', 'link tab active');
-				$('div.overlay-content:eq(1)').attr('id', 'cont');
-                
-				document.getElementById("cont").innerHTML = '<div id="slider"></div><span id="zahlbreite" style="color:#fff;">788</span>'+
-                    '<div style="margin: 50px;"><br><br>Design wechseln: <input type="button" id="buttons1" value="Design 1"> <input type="button" id="buttons2" value="Design 2"></div>';
-			            
-                        $('#buttons1').click(function() {
-                            design = '1';
-                            changedesign();
-                            $('#slider').slider('enable');
-                            $('#slider').slider({ disabled: "false" });
-                        });
-                        $('#buttons2').click(function() {
-                            design = '2';
-                            changedesign();
-                            $('#slider').slider('disable');
-                            $('#slider').slider({ disabled: "true" });
-                        });
-                
-                            $('#slider').slider({
-                                orientation: "horizontal",
-                                range: "min",
-                                max: $(window).width(),
-                                min: 788,
-                                value: valus,
-                                slide: refreshdas,
-                                change: refreshdas
-                            });
-                                        
-			});	
-		
-	}, 300);
-});
 
 $('#stream-next').click(function() {
 	update();
