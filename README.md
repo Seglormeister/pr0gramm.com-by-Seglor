@@ -1,4 +1,4 @@
-Pr0gramm.com-by-Seglor
+pr0gramm.com-by-Seglor
 ======================
 
 Willkommen ihr fags
