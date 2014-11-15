@@ -4,7 +4,7 @@
 // @author			Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5
+// @version     1.5.1
 // @grant       none
 // @require			http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -19,6 +19,9 @@ var wheelLast = 0;
 
 		var high = $(window).height()-51;
 		var highitemimage = $(window).height()-200;
+		var highcontainer = $(window).height()-52;
+		var widthitemimage = $(window).width()-600;
+		
     var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
 	'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
 	'.comments-large-rectangle { height:auto; position:px; width:280px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
@@ -49,8 +52,8 @@ var wheelLast = 0;
                       '#head { width: 100% !important }'+
                       '.comment-foot { width: 260px !important }'+
                       '.item-comments { top: 51px !important; width: 312px !important; height: '+high+'px !important;}' +
-                                '.item-container-content { margin-top: 20px !important; margin-left: 200px !important; }'+
-                                'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: absolute !important; height: 100% !important; width: 100% !important; }'+
+                                '.item-container-content { margin-top: 20px !important; padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
+                                'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: absolute !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
                                 'div.stream-row { clear: none !important; margin-left: 5px; }'+
                                 '#main-view { max-width: 100% !important; width: 100% !important; }'+
                                 '.user-info { margin: 20px 30px 0 0 !important; }'+
@@ -61,13 +64,15 @@ var wheelLast = 0;
 								'span.flags {padding-left: 120px; float: none !important;}'+
 								'.item-fullsize-link { right: 10px !important;}'+
 								'.item-container-content img { max-height: '+highitemimage+'px !important;}'+
-								'.item-image { max-height: '+highitemimage+'px !important; max-width: 50% !important;}'+
-								'.video-position-bar { width: 50% !important;}'+
-                'div.item-tags { padding: 4px 0 8px 20% !important;}'+
+								'.item-image { max-height: '+highitemimage+'px !important; max-width: '+widthitemimage+'px !important;}'+
+								'video.item-image { width: auto;}'+
+				'.video-position-bar { max-width: '+widthitemimage+'px !important; left: 200px !important;}'+
+                'div.item-tags { padding: 4px 0 8px 144px !important;}'+
 								'.head-menu { left: 200px; position: absolute;}'+
 								'div.in-pane { margin-left: -5px !important}'+
 								'#footer-links { top: 20px; right: 250px;}'+
-                'div.item-vote { left: 160px;)';
+								'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
+                'div.item-vote { left: 180px;)';
 	
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
