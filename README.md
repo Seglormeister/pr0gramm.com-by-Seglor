@@ -6,7 +6,10 @@ Willkommen ihr fags
 Dies ist ein Userscript für alle gängigen Brauser, um einige Usability Features hin zuzufügen. Genaue Auflistung folgt unten.
 
 Dick Script -> Vollbild pr0gramm
+
 Dünn Script -> schmales pr0gramm
+
+
 
 
 Integrierte Veränderungen:
