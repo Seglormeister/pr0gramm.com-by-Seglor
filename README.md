@@ -5,6 +5,9 @@ Willkommen ihr fags
 
 Dies ist ein Userscript für alle gängigen Brauser, um einige Usability Features hin zuzufügen. Genaue Auflistung folgt unten.
 
+Dick Script -> Vollbild pr0gramm
+Dünn Script -> schmales pr0gramm
+
 
 Integrierte Veränderungen:
 
@@ -12,11 +15,6 @@ Integrierte Veränderungen:
 - Bilderwechsel mit dem Mausrad
 - Mit Leertaste Bild vergrößern
 - Bildgröße an Bildschirm angepasst
-- (BETA) Weitere Optionsauswahl "Optik" unter den Einstellungen
-    - Seitenbreite verändern
-    - Vollbild Option
-
-Anmerkung: "Optik" Optionen sind noch nicht ausgereift!
 
 
 
