@@ -7,7 +7,7 @@
 // @version     1.5
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
-// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm.user.js
+// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dünn.user.js
 // ==/UserScript==
 
 (function() {
