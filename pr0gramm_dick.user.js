@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        pr0gramm.com Dick by Seglor
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author			Seglormeister
+// @author	Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.1
+// @version     1.5.2
 // @grant       none
-// @require			http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
@@ -48,14 +48,14 @@ var wheelLast = 0;
 'resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    '+
 'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}'+
 
+						'body { overflow-x:hidden; overflow-y: scroll; }'+
 						'#page { width: 100%}'+
                       '#head { width: 100% !important }'+
-                      '.comment-foot { width: 260px !important }'+
                       '.item-comments { top: 51px !important; width: 312px !important; height: '+high+'px !important;}' +
                                 '.item-container-content { margin-top: 20px !important; padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
                                 'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: absolute !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
                                 'div.stream-row { clear: none !important; margin-left: 5px; }'+
-                                '#main-view { max-width: 100% !important; width: 100% !important; }'+
+                                '#main-view { max-width: 101% !important; width: 101% !important; }'+
                                 '.user-info { margin: 20px 30px 0 0 !important; }'+
                                 '#pr0gramm-logo { margin-left: 15px !important; }'+
                                 '.item-pointer { display: none !important; }'+
@@ -67,12 +67,15 @@ var wheelLast = 0;
 								'.item-image { max-height: '+highitemimage+'px !important; max-width: '+widthitemimage+'px !important;}'+
 								'video.item-image { width: auto;}'+
 				'.video-position-bar { max-width: '+widthitemimage+'px !important; left: 200px !important;}'+
-                'div.item-tags { padding: 4px 0 8px 144px !important;}'+
+                'div.item-tags { padding: 4px 0 8px 240px !important;}'+
 								'.head-menu { left: 200px; position: absolute;}'+
 								'div.in-pane { margin-left: -5px !important}'+
 								'#footer-links { top: 20px; right: 250px;}'+
 								'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
-                'div.item-vote { left: 180px;)';
+                'div.item-vote { left: 180px;}'+
+				'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
+        '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }';
+
 	
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
