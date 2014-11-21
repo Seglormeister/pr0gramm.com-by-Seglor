@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name        pr0gramm.com Dick by Seglor
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author	Seglormeister
+// @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.2
+// @version     1.5.3
 // @grant       none
-// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
 (function() {
-  
 
+
+var spacepressed = false;
 var wheelLast = 0;
 /****/// CSS und Kommentarbox links
     
@@ -48,12 +49,16 @@ var wheelLast = 0;
 'resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    '+
 'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}'+
 
-						'body { overflow-x:hidden; overflow-y: scroll; }'+
-						'#page { width: 100%}'+
+'#user-admin, #user-ban { top: 126px; }'+
+'#head-content { background-color: #161618 !important; border-bottom: 2px solid #232326;}'+
+'.pane, .pane-head, .tab-bar, .user-stats, .in-pane { width: 792px; margin: 0 auto !important;}'+
+'#random { padding-left: 7px;} #random:hover { color: #ee4d2e; cursor: pointer;}'+
+						'body { overflow-x:hidden; overflow-y: auto; }'+
+						'#page { width: 100% !important; position: absolute !important;}'+
                       '#head { width: 100% !important }'+
                       '.item-comments { top: 51px !important; width: 312px !important; height: '+high+'px !important;}' +
-                                '.item-container-content { margin-top: 20px !important; padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
-                                'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: absolute !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
+                                '.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
+                                'div.item-container { background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
                                 'div.stream-row { clear: none !important; margin-left: 5px; }'+
                                 '#main-view { max-width: 101% !important; width: 101% !important; }'+
                                 '.user-info { margin: 20px 30px 0 0 !important; }'+
@@ -69,13 +74,13 @@ var wheelLast = 0;
 				'.video-position-bar { max-width: '+widthitemimage+'px !important; left: 200px !important;}'+
                 'div.item-tags { padding: 4px 0 8px 240px !important;}'+
 								'.head-menu { left: 200px; position: absolute;}'+
-								'div.in-pane { margin-left: -5px !important}'+
+								'div.in-pane { margin-left: -5px}'+
 								'#footer-links { top: 20px; right: 250px;}'+
 								'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
                 'div.item-vote { left: 180px;}'+
 				'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
         '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }';
-
+	
 	
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
@@ -97,11 +102,11 @@ var wheelLast = 0;
 
 	
 function update(e) {
+	/*	
 	// nur in Uploads
 	if ($("div.item-container").length) {
 		
-		//$('.item-container').hide();
-		$('.item-container').fadeIn();
+		//$('.item-container').fadeIn();
 		$(".item-container").attr( 'id', 'bild' );
 		
 		var positionX = 0,         
@@ -109,24 +114,17 @@ function update(e) {
 		var pageElement = document.getElementById('bild');
 		positionX += pageElement.offsetLeft;        
         positionY += pageElement.offsetTop;
-	//alert(positionX+' '+positionY);    	
-        window.scrollTo(positionX, positionY-130); 
+		//alert(positionX+' '+positionY);    	
+        //window.scrollTo(positionX, positionY-130); 
 	}
+	*/
 }
 
 
 	setInterval(function() {
-		if ($('.user-stats').length || $('.pane-head').length ) {
-				$("div#page").css( "width", "788px");
-		}else{
-				$("div#page").css( "width", "100%");
-		}
 		
 		if ($('.item-image').length) {
-			/*
-			var vids = document.getElementsByTagName("video");
-			for (i = 0; i < vids.length; i++) vids[i].setAttribute("controls", "true");
-			*/
+			
 			// + bei resized Bildern
 			if (!$('.item-fullsize-link').length) {
 				var imgu = document.getElementsByClassName('item-image')[0]; 
@@ -138,21 +136,12 @@ function update(e) {
 			var stil = document.getElementsByTagName('html')[0];
 			stil.style.overflow='hidden';
 
-			$(".item-container").attr( 'id', 'bild' );
-			var positionX = 0,         
-			positionY = 0;
-			var pageElement = document.getElementById('bild');
-			positionX += pageElement.offsetLeft;        
-			positionY += pageElement.offsetTop;
-			//alert(positionX+' '+positionY);
-				window.scrollTo(positionX, positionY-130); 
 		}else{
 			var stil = document.getElementsByTagName('html')[0];
-			stil.style.overflow='visible';
+			stil.style.overflow='visible';	
 		}
-		
-    }, 200);
-	
+    }, 100);
+
 
 $('#stream-next').click(function() {
 	update();
@@ -160,12 +149,11 @@ $('#stream-next').click(function() {
 $('#stream-prev').click(function() {
 	update();
 });
-
-
+		
+		
 // Space Vergrößerung und links/rechts Bildwechsel
 document.addEventListener("keydown", keydown, false);
 	
-var spacepressed = false;
 function keydown(event) {
 	if (event.keyCode == '37' || event.keyCode == '39') {
 		update();
@@ -192,10 +180,6 @@ function keydown(event) {
 				spacepressed = false;
 			}
 		}
-	}else if (event.keyCode == '68') {                                
-         //$('#stream-next').click();                                
-    }else if (event.keyCode == '65') {                                
-        //$('#stream-prev').click();    
 	}
 }
 
@@ -246,7 +230,6 @@ function handleWheel(event) {
             $('#stream-prev').click();
 		}
 		update();
-	
 	}
 }
 
@@ -254,7 +237,6 @@ function isHover(e) {
 if (!e) return false;
     return (e.parentElement.querySelector(':hover') === e);
 }
-
 
 
 
