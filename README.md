@@ -3,7 +3,7 @@ pr0gramm.com-by-Seglor
 
 Willkommen ihr fags
 
-Dies ist ein Userscript für alle gängigen Brauser, um einige Usability Features hin zuzufügen. Genaue Auflistung folgt unten.
+Dies ist ein Userscript für alle gängigen Brauser, um einige Usability Features hinzuzufügen. Genaue Auflistung folgt unten.
 
 Dick Script -> Vollbild pr0gramm
 
@@ -16,7 +16,6 @@ Integrierte Veränderungen:
 
 - Kommentarleiste links
 - Bilderwechsel mit dem Mausrad
-- Mit Leertaste Bild vergrößern
 - Bildgröße an Bildschirm angepasst
 
 
@@ -36,5 +35,5 @@ Raw Link: https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0
 
 
 
-Huldigt dem Pr0gramm.
+Huldigt dem pr0gramm.
     
