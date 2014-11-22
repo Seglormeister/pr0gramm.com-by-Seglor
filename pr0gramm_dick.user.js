@@ -4,7 +4,7 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.4
+// @version     1.5.4.1
 // @grant       none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
