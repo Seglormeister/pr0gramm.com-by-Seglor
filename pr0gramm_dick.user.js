@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name        pr0gramm.com Dick by Seglor
+// @name        pr0gramm.com Dick by Seglor FIXED
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.3
+// @version     1.5.4
 // @grant       none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
-// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
+// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.xx
 // ==/UserScript==
 
 (function() {
@@ -124,7 +124,8 @@ function update(e) {
 	setInterval(function() {
 		
 		if ($('.item-image').length) {
-			
+            var itemId = document.URL;
+            window.scrollTo(0, $('#item-'+itemId.substring(itemId.length-6, itemId.length)).offset().top-52);
 			// + bei resized Bildern
 			if (!$('.item-fullsize-link').length) {
 				var imgu = document.getElementsByClassName('item-image')[0]; 
