@@ -400,7 +400,7 @@ var wheelLast = 0;
 	setInterval(function() {
 		
 		if (!$('a#random').length) {
-			insertButton();
+			//insertButton();
 		}
 		if ($('.item-image').length) {
 			
