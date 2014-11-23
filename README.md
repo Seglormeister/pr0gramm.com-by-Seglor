@@ -3,9 +3,9 @@ pr0gramm.com-by-Seglor
 
 Willkommen ihr fags
 
-Dies ist ein Userscript für alle gängigen Brauser, um einige Usability Features hinzuzufügen. Genaue Auflistung folgt unten.
+Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten.
 
-Dick Script -> Vollbild pr0gramm
+Dick Script -> Vollbild/old pr0gramm
 
 Dünn Script -> schmales pr0gramm
 
@@ -14,9 +14,11 @@ Dünn Script -> schmales pr0gramm
 
 Integrierte Veränderungen:
 
+- Vollbildansicht (beim Dick-Script)
 - Kommentarleiste links
 - Bilderwechsel mit dem Mausrad
 - Bildgröße an Bildschirm angepasst
+- Kommentare nach Zeit/Beliebtheit sortieren
 
 
 
