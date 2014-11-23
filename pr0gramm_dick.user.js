@@ -4,7 +4,7 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.4.1
+// @version     1.5.5
 // @grant       none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -12,88 +12,7 @@
 
 (function() {
 
-p.View.Layout.prototype.init = function(container, parent) {
-		alert(this.contentWidth);
-        this.parent(container, parent);
-        this.data.user = p.user;
-        this.contentWidth = 0;
-        for (var i = 0; i < this.sizes.length; i++) {
-            this.contentWidth = this.sizes[i];
-            if (window.screen && screen.width < this.sizes[i]) {
-                break;
-            }
-        }
-		this.contentWidth = '100%';
-		
-        p.onsetview = this.onSetView.bind(this);
-        p.api.onerror = this.onError.bind(this);
-        $('meta[name=viewport]').attr('content', 'minimal-ui, width=' + this.contentWidth);
-}
 
-p.View.Layout.prototype.show = function(params) {
-        if (p.user.flags == (CONFIG.SFW_FLAG.SFW.flag | CONFIG.SFW_FLAG.NSFW.flag | CONFIG.SFW_FLAG.NSFL.flag)) {
-            this.data.currentFilterName = 'all';
-        } else {
-            var names = [];
-            for (var f in CONFIG.SFW_FLAG) {
-                if (p.user.flags & CONFIG.SFW_FLAG[f].flag) {
-                    names.push(CONFIG.SFW_FLAG[f].name);
-                }
-            }
-            if (names.length) {
-                this.data.currentFilterName = names.join('+');
-            } else {
-                this.data.currentFilterName = CONFIG.SFW_FLAG.SFW.name;
-            }
-        }
-        this.parent(params);
-		alert("test");
-        $('#page, #head').css('width', '100%');
-        $('#page').addClass(p.mobile ? 'mobile' : 'desktop');
-        if (p.user.id) {
-            $('#page').addClass(p.user.admin ? 'status-admin' : 'status-user');
-        }
-        $('#login-link').click(this.showLogin.bind(this));
-        $('#settings-link').click(this.showSettings.bind(this));
-        $('#upload-link').click(this.showUpload.bind(this));
-        this.overlay = $('#overlay');
-        this.overlay.click(this.hideOverlay.bind(this));
-        $('#filter-link').click(function() {
-            $('a.filter-setting').each(function() {
-                var el = $(this);
-                el.toggleClass('active', !!(p.user.flags & parseInt(el.data('flag'))));
-            });
-            $('#filter-menu').fadeToggle(100);
-            return false;
-        });
-        $('a.filter-setting').click(function() {
-            $(this).toggleClass('active');
-            return false;
-        });
-        $('a#filter-save').click(function() {
-            var flags = 0;
-            $('a.filter-setting.active').each(function() {
-                flags += parseInt($(this).data('flag'));
-            });
-            p.user.setFlags(flags);
-            p.reload();
-            $('#filter-menu').fadeOut(100);
-            return false;
-        });
-        var that = this;
-        $('#search-form').submit(function(ev) {
-            that.search($('#q').val());
-            ev.preventDefault();
-            return false;
-        });
-        $('.close-button-wrap').click(function(ev) {
-            $($(this).data('target')).hide();
-            ev.preventDefault();
-            ev.stopPropagation();
-        });
-        p.ads.fill(this.$container.find('.gpt'));
-    }
-	
 p.View.Stream.Main.prototype.show = function(params) {
         if (params.token) {
             p.mainView.showRegister(params.token);
@@ -221,16 +140,18 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
 }
 
 
+
+
 // Comments sortieren	
-p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} </div> <?js if( !p.mobile ) { ?> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js } ?> <form class="comment-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> <span class="sorter"><a id="com-new" href="">Neuste</a> | <a id="com-top" href="">Top</a></span></div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { recurseComments(c.children, level+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1); ?> </div> ',
+p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} </div> <?js if( !p.mobile ) { ?> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js } ?> <form class="comment-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">Neuste</a> | <a id="com-top" href="">Top</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { recurseComments(c.children, level+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1); ?> </div> ',
 
 p.View.Stream.Comments.SortTime = function(a, b) {
     return (b.created - a.created);
 }
 
 p.View.Stream.Comments.prototype.loaded = function(item) {
-		
         item.id = (item.id || this.data.itemId);
+		
 		if (localStorage.getItem('comorder')) {
 			if (localStorage.getItem('comorder') == 'new') {
 				this.data.linearComments = (item.id <= item.id);
@@ -253,57 +174,8 @@ p.View.Stream.Comments.prototype.loaded = function(item) {
         this.data.itemId = item.id;
         this.render();
 }
-	
-/*
-    p.Stream.prototype._processResponse = function (data, callback) {
-    if (!data.items || !data.items.length) {
-      return null;
-    }
-       
-    var tempItems = [];
-    for (var i = 0; i < data.items.length; i++) {
-        //if (data.items[i].up - data.items[i].down < -20) {
-		//print_r(data.items[i]);
-           tempItems.push(data.items[i]);
-        //}
-    }
-       
-    data.items = tempItems;
-       //console.log(data.items);
-	   //return null;
-    this.reached.start = data.atStart || this.reached.start;
-    this.reached.end = data.atEnd || this.reached.end;
-    var oldestId,
-    newestId;
-    if (this.options.promoted) {
-      data.items.sort(p.Stream.sortByPromoted);
-      oldestId = data.items[data.items.length - 1].promoted;
-      newestId = data.items[0].promoted;
-    }
-    else {
-      data.items.sort(p.Stream.sortById);
-      oldestId = data.items[data.items.length - 1].id;
-      newestId = data.items[0].id;
-    }
-    var position = (oldestId < this._oldestId) ? p.Stream.POSITION.APPEND : p.Stream.POSITION.PREPEND;
-    this._oldestId = Math.min(this._oldestId, oldestId);
-    this._newestId = Math.max(this._newestId, newestId);
-    var prev = null;
-    var itemVotes = p.user.voteCache.votes.items;
-    for (var i = 0; i < data.items.length; i++) {
-      var item = data.items[i];
-      item.thumb = CONFIG.PATH.THUMBS + item.thumb;
-      item.image = CONFIG.PATH.IMAGES + item.image;
-      item.fullsize = item.fullsize ? CONFIG.PATH.FULLSIZE + item.fullsize : null;
-      item.vote = itemVotes[item.id] || 0;
-      this.items[item.id] = item;
-    }
-    return position;
-  }
 
-*/
 
-var animstop = false;
 var done = false;
 var spacepressed = false;
 var wheelLast = 0;
@@ -315,7 +187,9 @@ var wheelLast = 0;
 		var highcontainer = $(window).height()-52;
 		var widthitemimage = $(window).width()-600;
 		
-    var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
+	$('#head-content').append('<a class="link" id="random" href=""></a>');
+    
+	var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
 	'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
 	'.comments-large-rectangle { height:auto; position:px; width:280px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
 	'#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
@@ -341,13 +215,17 @@ var wheelLast = 0;
 'resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    '+
 'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}'+
 
-'.sorter, .sorter a { color: rgba(155, 155, 155, 1);}'+
+
+
+'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
+'.sorter, .sorter a { color: rgba(155, 155, 155, 1); font-size: 0.94em;}'+
 '#com-new { padding-left: 90px} #com-new, #com-top {  margin: 0px 3px;}'+
 '#com-new.active, #com-new:hover { color: #EE4D2E;} #com-top.active, #com-top:hover { color: #EE4D2E;}'+
 '#user-admin, #user-ban { top: 126px; }'+
 '#head-content { background-color: #161618 !important; border-bottom: 2px solid #232326;}'+
 '.pane, .pane-head, .tab-bar, .user-stats, .in-pane { width: 792px; margin: 0 auto !important;}'+
-'#random { padding-left: 7px;} #random:hover { color: #ee4d2e; cursor: pointer;}'+
+'#random { position: absolute; top: 18px; left: 610px; height: 16px; width: 16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7ElEQVQ4je2SsUoDQRRFzyxilcJiq3QGEb/A3s7PCPZCfidGrPIDEgQ7sUinfSJEIWJnISJoJOyx8G1IIWym91Yz896587gz8K9UL9Qd4ATYbWCegIuU0tvqRC3VmZtrppYARXicAp2MyTvBrAxugGGGwTAYCrUL9IF74HwD+Cx6+2o3qVNgH/gCjoBD4BF4B7YC+gZawB5wB9wC28ADak9dRDgj9VJ9/iO4l6hfxX6h9gBQxxkvUGu8HuI8I8Ba83WDEbDMgJfB/P7EqqrKlNIx8AFMGuADoKVeF0XxCoDaVj/VQdPV6iB62wA/BoruHjilSCsAAAAASUVORK5CYII=);} '+
+'#random:hover { color: #ee4d2e; cursor: pointer;)}'+
 						'body { overflow-x:hidden; overflow-y: auto; }'+
 						'#page { width: 100% !important; position: absolute !important;}'+
                       '#head { width: 100% !important }'+
@@ -370,7 +248,7 @@ var wheelLast = 0;
                 'div.item-tags { padding: 4px 0 8px 240px !important;}'+
 								'.head-menu { left: 200px; position: absolute;}'+
 								'div.in-pane { margin-left: -5px}'+
-								'#footer-links { top: 20px; right: 250px;}'+
+								'#footer-links { top: 20px; right: 250px; height: 50px;}'+
 								'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
                 'div.item-vote { left: 180px;}'+
 				'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
@@ -398,12 +276,13 @@ var wheelLast = 0;
 
 
 	setInterval(function() {
-		
-		if (!$('a#random').length) {
-			//insertButton();
+
+		var dingsda = document.getElementById('random');
+		if (dingsda.getAttribute('href') == '') {
+			insertButton();
 		}
 		if ($('.item-image').length) {
-			
+		
 			if (!$('#com-new').hasClass('active') && !$('#com-top').hasClass('active')) {
 				$('#com-' + localStorage.getItem('comorder')).toggleClass('active');
 			}
@@ -456,13 +335,6 @@ var wheelLast = 0;
 		}
     }, 100);
 
-
-$('#stream-next').click(function() {
-	update();
-});
-$('#stream-prev').click(function() {
-	update();
-});
 		
 		
 // Space Vergrößerung und links/rechts Bildwechsel
@@ -543,7 +415,6 @@ function handleWheel(event) {
 		}else{
             $('#stream-prev').click();
 		}
-		update();
 	}
 }
 
@@ -561,7 +432,6 @@ if (!e) return false;
      
     function getImage() {
       var lastId = 666;
-	  //alert(window.location.pathname);
       if (window.location.pathname == '/new') {
         lastId = getElementByXpath('/html/body/div[2]/div[2]/div[1]/div[1]/a[1]').id;
         lastId = lastId.split('-') [1];
@@ -576,9 +446,8 @@ if (!e) return false;
     function insertButton() {
       var div = document.getElementsByClassName('head-menu') [0];
       var imageId = getImage();
-		if (!$("a#random").length) {
-			div.innerHTML = div.innerHTML + '<a class="link" id="random" href="http://pr0gramm.com/new/' + imageId + '"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7ElEQVQ4je2SsUoDQRRFzyxilcJiq3QGEb/A3s7PCPZCfidGrPIDEgQ7sUinfSJEIWJnISJoJOyx8G1IIWym91Yz896587gz8K9UL9Qd4ATYbWCegIuU0tvqRC3VmZtrppYARXicAp2MyTvBrAxugGGGwTAYCrUL9IF74HwD+Cx6+2o3qVNgH/gCjoBD4BF4B7YC+gZawB5wB9wC28ADak9dRDgj9VJ9/iO4l6hfxX6h9gBQxxkvUGu8HuI8I8Ba83WDEbDMgJfB/P7EqqrKlNIx8AFMGuADoKVeF0XxCoDaVj/VQdPV6iB62wA/BoruHjilSCsAAAAASUVORK5CYII="/></a>';
-		}
+	  dingsda = document.getElementById('random');
+		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
     }
 
 		
