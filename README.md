@@ -4,11 +4,15 @@ pr0gramm.com-by-Seglor
 Willkommen ihr fags
 
 Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten.
+
 BITTE NUR EINES INSTALLIEREN!
 
  pr0gramm_dick.user.js -> Breitbild/old pr0gramm
+ 
 oder
+
  pr0gramm_dünn.user.js -> schmales pr0gramm
+
 
 pr0gramm.user.js -> Alte Version (mit Bugs!) dient nur noch dazu, um die UpdateURL auf die neuen Scripte anzupassen!
 
