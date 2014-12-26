@@ -11,7 +11,7 @@ Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuz
  
 oder
 
-> [pr0gramm_dünn.user.js](https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dünn.user.js) **->** schmales pr0gramm
+> [pr0gramm_dünn.user.js](https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dünn.user.js) **->** schmales pr0gramm (hat nicht alle Features! Keine Updates!)
 
 
 
