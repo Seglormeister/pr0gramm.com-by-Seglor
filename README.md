@@ -3,7 +3,7 @@ pr0gramm.com-by-Seglor
 
 Willkommen ihr fags
 
-Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten.
+Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten. Ich update zur Zeit nur noch das Dick Script!
 
 **BITTE NUR EINES INSTALLIEREN!**
 
@@ -20,11 +20,13 @@ pr0gramm.user.js -> **Alte Version** (mit Bugs!) dient nur noch dazu, um die Upd
 
 ###Integrierte Veränderungen:
 
+- "Bereits gesehen"-Markierung der Uploads (beim Dick-Script)
+- Custom Scrollbar in den Kommentaren (beim Dick-Script)
 - Vollbildansicht (beim Dick-Script)
-- Kommentarleiste links
+- Kommentarleiste links (beim Dick-Script)
 - Bilderwechsel mit dem Mausrad
 - Bildgröße an Bildschirm angepasst
-- Kommentare nach Zeit/Beliebtheit sortieren
+- Kommentare nach Zeit/Beliebtheit sortieren (beim Dick-Script)
 
 
 
