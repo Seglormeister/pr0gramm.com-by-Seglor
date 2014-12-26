@@ -4,7 +4,7 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.6
+// @version     1.5.7
 // @grant       none
 // @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -190,7 +190,7 @@ var wheelLast = 0;
     
 	var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
 	'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
-	'.comments-large-rectangle { height:auto; position:px; width:280px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
+	'.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
 	'#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
 	'#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
 				
@@ -217,7 +217,8 @@ var wheelLast = 0;
 'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}'+
 
 
-
+'.comments-large-rectangle { position:absolute; width: 0px;}'+
+'.side-wide-skyscraper { left: auto !important;}'+
 'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
 '.sorter, .sorter a { color: rgba(155, 155, 155, 1); font-size: 0.94em;}'+
 '#com-new { padding-left: 90px} #com-new, #com-top {  margin: 0px 3px;}'+
@@ -226,15 +227,15 @@ var wheelLast = 0;
 '#head-content:after { left: 7px !important;}'+
 '#head-content { background-color: #161618 !important; border-bottom: 2px solid #232326;}'+
 '.pane, .pane-head, .tab-bar, .user-stats, .in-pane { width: 792px; margin: 0 auto !important;}'+
-'#random { position: absolute; top: 18px; left: 610px; height: 16px; width: 16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7ElEQVQ4je2SsUoDQRRFzyxilcJiq3QGEb/A3s7PCPZCfidGrPIDEgQ7sUinfSJEIWJnISJoJOyx8G1IIWym91Yz896587gz8K9UL9Qd4ATYbWCegIuU0tvqRC3VmZtrppYARXicAp2MyTvBrAxugGGGwTAYCrUL9IF74HwD+Cx6+2o3qVNgH/gCjoBD4BF4B7YC+gZawB5wB9wC28ADak9dRDgj9VJ9/iO4l6hfxX6h9gBQxxkvUGu8HuI8I8Ba83WDEbDMgJfB/P7EqqrKlNIx8AFMGuADoKVeF0XxCoDaVj/VQdPV6iB62wA/BoruHjilSCsAAAAASUVORK5CYII=);} '+
+'#random { display: block; position: relative; top: 18px; margin-left: 650px; height: 16px; width: 16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7ElEQVQ4je2SsUoDQRRFzyxilcJiq3QGEb/A3s7PCPZCfidGrPIDEgQ7sUinfSJEIWJnISJoJOyx8G1IIWym91Yz896587gz8K9UL9Qd4ATYbWCegIuU0tvqRC3VmZtrppYARXicAp2MyTvBrAxugGGGwTAYCrUL9IF74HwD+Cx6+2o3qVNgH/gCjoBD4BF4B7YC+gZawB5wB9wC28ADak9dRDgj9VJ9/iO4l6hfxX6h9gBQxxkvUGu8HuI8I8Ba83WDEbDMgJfB/P7EqqrKlNIx8AFMGuADoKVeF0XxCoDaVj/VQdPV6iB62wA/BoruHjilSCsAAAAASUVORK5CYII=);} '+
 '#random:hover { color: #ee4d2e; cursor: pointer;)}'+
 						'body { overflow-x:hidden; overflow-y: auto; }'+
 						'#page { width: 100% !important; position: absolute !important;}'+
                       '#head { width: 100% !important }'+
-      '.item-comments { overflow:auto; top: 51px !important; width: 312px !important; height: '+high+'px !important;}' +
+      '.item-comments { overflow-x:hidden; top: 51px !important; width: 312px !important; height: '+high+'px !important;}' +
                                 '.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
                                 'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
-                                'div.stream-row { clear: none !important; margin-left: 5px; }'+
+                                'div.stream-row { clear: none !important; }'+
                                 '#main-view { max-width: 101% !important; width: 101% !important; }'+
                                 '.user-info { margin: 20px 30px 0 0 !important; }'+
                                 '#pr0gramm-logo { margin-left: 15px !important; }'+
@@ -281,7 +282,7 @@ var wheelLast = 0;
             document.documentElement.appendChild(node);
         }
     }
-
+	
   
 // INDEXEDDB
 	
@@ -293,24 +294,8 @@ if (!window.indexedDB) {
     window.alert("Ihr Browser unterstützt keine stabile Version von IndexedDB. Dieses und jenes Feature wird Ihnen nicht zur Verfügung stehen.");
 }
 
-function opendb() {
-	var db;
-    var open = window.indexedDB.open("UploadsSeen", 1);
-    open.onsuccess = function (evt) {
-      //db = this.result;
-	  db = evt.target.result;
-      console.log("openDb DONE");
-	  return db;
-    };
-    open.onerror = function (evt) {
-      console.log("openDb:", evt.target.errorCode);
-    };
-    open.onupgradeneeded = function (evt) {
-      console.log("openDb.onupgradeneeded");
-      var store = evt.target.result.createObjectStore( "uploads", { keyPath: "id"});
-	  db = evt.target.result;
-    };
-}
+//window.addEventListener('onpopstate', saveid, false);
+
 
 function saveid() {
 	var ids = 0;
@@ -319,6 +304,7 @@ function saveid() {
 		var open = indexedDB.open("UploadsSeen", 1);
 		open.onsuccess = function (evt) {
 			db = this.result;
+			//db = evt.target.result;
 			console.log("openDb DONE");
 				var uploadid = newurl.match('/([0-9]{2,7})');
 				var trans = db.transaction("uploads", "readwrite");
@@ -576,7 +562,7 @@ if (!e) return false;
     //r button einfügen
      
     function insertButton() {
-      var div = document.getElementsByClassName('head-menu') [0];
+      var div = document.getElementsByClassName('head-menu')[0];
       var imageId = getImage();
 	  dingsda = document.getElementById('random');
 		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
@@ -786,5 +772,9 @@ var ssb = {
     }
 }
 
+// Seite zentrieren links/rechts
+	var mainwidth = $('#main-view' ).width();
+	var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
+	$('div#stream').css('margin-left', margin);
 		
 })();
