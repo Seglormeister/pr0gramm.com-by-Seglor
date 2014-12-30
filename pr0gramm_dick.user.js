@@ -4,7 +4,7 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.8.1
+// @version     1.5.8.2
 // @grant       none
 // @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -75,26 +75,6 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
             }
         }
 		this.currentItemId = id;
-}
-
-p.View.Stream.Main.prototype.onscroll = function(ev) {
-        if (this.loadInProgress || !this.hasItems) {
-            return;
-        }
-		alert("scroll");
-        var loadingTargetNewer = this.loadingTargetDistance / 2,
-            loadingTargetOlder = $('#main-view').height() - this.loadingTargetDistance + 400;
-        var current = $(document).scrollTop();
-        if (current > loadingTargetOlder && !this.stream.reached.end) {
-            this.loadInProgress = true;
-            this.stream.loadOlder(this.loadedBound);
-            this.$container.append(p.View.Base.LoadingAnimHTML);
-        } else if (current < loadingTargetNewer && !this.stream.reached.start) {
-            this.loadInProgress = true;
-            this.stream.loadNewer(this.loadedBound);
-            this.$container.prepend(p.View.Base.LoadingAnimHTML);
-            $(document).scrollTop($(document).scrollTop() + (117 - 52));
-        }
 }
 
 
@@ -650,7 +630,6 @@ var ssb = {
         // binding own onscroll event
         cont.onscroll = cont.ssb_onscroll;
 		var conte = document.getElementById('page');
-		conte.onscroll = function() {alert("test");};
 		
 		//var elem = document.getElementById('#page');
 		//elem.onscroll = cont.ssb_onscroll;
