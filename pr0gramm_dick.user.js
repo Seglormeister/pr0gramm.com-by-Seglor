@@ -4,13 +4,14 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.8
+// @version     1.5.8.1
 // @grant       none
 // @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
 (function() {
+
 
 // Verhindert Gewackel beim Scrollen
 p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
@@ -76,6 +77,25 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
 		this.currentItemId = id;
 }
 
+p.View.Stream.Main.prototype.onscroll = function(ev) {
+        if (this.loadInProgress || !this.hasItems) {
+            return;
+        }
+		alert("scroll");
+        var loadingTargetNewer = this.loadingTargetDistance / 2,
+            loadingTargetOlder = $('#main-view').height() - this.loadingTargetDistance + 400;
+        var current = $(document).scrollTop();
+        if (current > loadingTargetOlder && !this.stream.reached.end) {
+            this.loadInProgress = true;
+            this.stream.loadOlder(this.loadedBound);
+            this.$container.append(p.View.Base.LoadingAnimHTML);
+        } else if (current < loadingTargetNewer && !this.stream.reached.start) {
+            this.loadInProgress = true;
+            this.stream.loadNewer(this.loadedBound);
+            this.$container.prepend(p.View.Base.LoadingAnimHTML);
+            $(document).scrollTop($(document).scrollTop() + (117 - 52));
+        }
+}
 
 
 // Comments sortieren	
@@ -122,14 +142,15 @@ var wheelLast = 0;
 		var highitemimage = $(window).height()-200;
 		var highcontainer = $(window).height()-52;
 		var widthitemimage = $(window).width()-600;
-		
-	$('#head-content').append('<a class="link" id="random" href=""></a>');
+
+// Random Button hinzufügen		
+$('#head-content').append('<a class="link" id="random" href=""></a>');
     
-	var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
-	'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
-	'.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
-	'#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
-	'#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
+var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
+'.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
+'.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
+'#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
+'#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
 				
 '.ui-widget-content {border: 1px solid #AAAAAA;color: #222222;}'+
 '.ui-slider { position: relative; text-align: left;}'+
@@ -144,17 +165,14 @@ var wheelLast = 0;
 '@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+
 
 
-
 '#filter-menu { left: 318px !important;}'+
-'div.comment-box > div.comment-box { background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.2) !important; border-left: 1px solid rgba(12, 12, 12, 0.39);}'+		
 'div.comments { padding: 0px 0 0px 6px !important;}'+				
 '.item-comments {width: 24% !important;}} '+
 '#head { padding-left: 0px !important; z-index:200; } #stream-next, #stream-prev { z-index:122; top: auto !important; padding: 0 !important; bottom: 30% !important;} '+
-'.item-image{max-height:460px;} .item-comments {\n  position: fixed !important;\n  '+
-'top: 0;\n  left: 0;\n \n  width: 300px;\n  height: 100vh;\n  max-height: 100vh;\n  '+
-'overflow-y: auto;\n  overflow-x: hidden;\n}\n \n.item-comments textarea.comment {\n  '+
-'resize: none;\n}\n \ndiv.comment-box > div.comment-box {\n    '+
-'background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);\n    padding: 0 0 0 6px;\n}'+
+'.item-image{max-height:460px;}'+
+'.item-comments { position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
+'.item-comments textarea.comment { resize: none;}'+
+'div.comment-box > div.comment-box { padding: 0 0 0 6px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #171717;}'+		
 
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
@@ -175,7 +193,7 @@ var wheelLast = 0;
 						'body { overflow-x:hidden; overflow-y: auto; }'+
 						'#page { padding-left: 0px !important; margin: 0 0 0 0 !important; width: 100% !important; position: absolute !important;}'+
                       '#head { width: 100% !important }'+
-      '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 342px !important; height: '+high+'px !important;}' +
+'.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
                                 '.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
                                 'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
                                 'div.stream-row { clear: none !important; }'+
@@ -191,7 +209,7 @@ var wheelLast = 0;
 								'.item-image { max-height: '+highitemimage+'px !important; max-width: '+widthitemimage+'px !important;}'+
 								'video.item-image { width: auto;}'+
 				'.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
-                'div.item-tags { padding: 4px 0 8px 240px !important;}'+
+                'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
 								'.head-menu { left: 200px; position: absolute;}'+
 								'div.in-pane { margin-left: -5px}'+
 								'#footer-links { top: 20px; left: auto !important; right: 270px !important; height: 20px; width:100px !important; bottom: 0px !important; margin: 0 !important}'+
@@ -200,14 +218,14 @@ var wheelLast = 0;
 				'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
         '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
   
-      '.ssb_down {display:none;background:#000;bottom:0;cursor:pointer;position:absolute;right:0;}'+
-      '.ssb_sb {border-radius: 7px; -webkit-border-radius: 7px; background: rgb(102, 102, 102); -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);cursor:pointer;position:absolute;right:0;}'+
+'.ssb_down {display:none;background:#000;bottom:0;cursor:pointer;position:absolute;right:0;}'+
+'.ssb_sb {border-radius: 7px; -webkit-border-radius: 7px; background: rgb(102, 102, 102); -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);cursor:pointer;position:absolute;right:0;}'+
 '.ssb_sb_down {}'+
 '.ssb_sb_over {background: #777;}'+
 '.ssb_st {background: #2A2E31; height:100%; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);cursor:pointer;position:absolute;right:0;top:0;}'+
 '.ssb_up {display:none;cursor:pointer;position:absolute;right:0;top:0;}';
 	
-	
+// CSS Style hinzufügen
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
     } else if (typeof PRO_addStyle != "undefined") {
@@ -236,7 +254,6 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 if (!window.indexedDB) {
     window.alert("Ihr Browser unterstützt keine stabile Version von IndexedDB. Dieses und jenes Feature wird Ihnen nicht zur Verfügung stehen.");
 }
-
 
 function saveid() {
 	var ids = 0;
@@ -280,13 +297,14 @@ function saveid() {
 			console.log("openDb2 DONE");
 			var trans = db.transaction("uploads", "readonly");
 			var store = trans.objectStore("uploads");
-			//var index = store.Index('uploadid');
-			store.openCursor(null,'prevunique').onsuccess = function(event) {
+			var first = $('.stream-row a:first').attr('id');
+			var last = $('#stream .stream-row:last').find('a:last').attr('id');
+			var range = IDBKeyRange.bound(last.slice(5), first.slice(5));
+			store.openCursor(range, 'prevunique').onsuccess = function(event) {
 				var cursor = event.target.result;
 
 				if (cursor) {
 					var value = parseInt(cursor.value.uploadid);
-					//console.log('#item-', value, $('#item-' + value).length);
 					if ($('#item-' + value).children('div').length == 0) {
 						$('#item-' + value).append('<div class="seen" style="border-bottom: 1px solid  rgba(255, 72, 0, 0.84); height: 17px; background: none repeat scroll 0% 0% rgba(22, 22, 24, 0.7); position: relative; width: 128px; top: -17px;"><img style="opacity: 0.7; margin:auto; width:13px; padding-top: 1px;" src="http://i.imgur.com/CC4GAUc.png"></div>');
 					}
@@ -296,7 +314,7 @@ function saveid() {
 					console.log("No more entries!", ids);
 				}
 			};
-			store.openCursor(null,'prevunique').onerror = function(event) {
+			store.openCursor(range, 'prevunique').onerror = function(event) {
 				console.log("Db2 Error: ", event);
 			};
 		};
@@ -332,11 +350,19 @@ setInterval(function() {
 			insertButton();
 		}
       
+		// Bei Laden von neuem Content, saveid aufrufen
+        var loadingTargetNewer = 2048 / 2,
+            loadingTargetOlder = $('#main-view').height() - 2048 + 400;
+        var current = $(document).scrollTop();
+        if (current > loadingTargetOlder) {
+			saveid();
+        }	  
+	  
 		if ($('.item-image').length) {
 
 		   // Scrollbar laden in den Comments
 		   if ($('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
-			  if ($('.comments').height() > ($('.item-comments').height()-198)) {
+			  if ($('.comments').height() > ($('.item-comments').height()-230)) {
 				 ssb.scrollbar('item-comments');
 				 $('.item-comments').addClass('scroll');
 				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
@@ -488,11 +514,10 @@ if (!e) return false;
 }
 
 
-
+// Code für den Random Button
     function getElementByXpath(path) {
       return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     }
-    //imageid für r button
      
     function getImage() {
       var lastId = 666;
@@ -515,7 +540,7 @@ if (!e) return false;
     }
 
     
-
+// Custom Scrollbar
 var ssb = {
     aConts  : [],
     mouseY : 0,
