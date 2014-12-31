@@ -4,7 +4,7 @@
 // @author		Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.8.2
+// @version     1.5.8.3
 // @grant       none
 // @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -156,6 +156,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
+'div.comment-foot { border-bottom: none; padding-bottom: 4px; }'+
 'div.comment { border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
 '.vote-fav { left: 350px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
