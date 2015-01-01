@@ -1,17 +1,16 @@
 // ==UserScript==
 // @name        pr0gramm.com Dick by Seglor
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author		Seglormeister
+// @author	Seglormeister
 // @description Improve pr0gramm mit Fullscreen wörk
 // @include     http://pr0gramm.com/*
-// @version     1.5.8.2
+// @version     1.5.9
 // @grant       none
-// @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
 (function() {
-
 
 // Verhindert Gewackel beim Scrollen
 p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
@@ -77,7 +76,6 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
 		this.currentItemId = id;
 }
 
-
 // Comments sortieren	
 p.View.Stream.Comments.prototype.template = '<div class="comments-head" style="display:none"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} </div> <?js if( !p.mobile ) { ?> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js } ?> <form style="display:none" class="comment-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">Neuste</a> | <a id="com-top" href="">Top</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div style="display:none" class="comments"> <?js var recurseComments = function( comments, level ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { recurseComments(c.children, level+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1); ?> </div> ',
 
@@ -87,7 +85,6 @@ p.View.Stream.Comments.SortTime = function(a, b) {
 
 p.View.Stream.Comments.prototype.loaded = function(item) {
         item.id = (item.id || this.data.itemId);
-		
 		if (localStorage.getItem('comorder')) {
 			if (localStorage.getItem('comorder') == 'new') {
 				this.data.linearComments = (item.id <= item.id);
@@ -115,8 +112,6 @@ p.View.Stream.Comments.prototype.loaded = function(item) {
 var done = false;
 var spacepressed = false;
 var wheelLast = 0;
-/****/// CSS und Kommentarbox links
-    
 
 		var high = $(window).height()-51;
 		var highitemimage = $(window).height()-200;
@@ -125,7 +120,8 @@ var wheelLast = 0;
 
 // Random Button hinzufügen		
 $('#head-content').append('<a class="link" id="random" href=""></a>');
-    
+
+/****/// CSS
 var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
 '.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }'+
 '.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
@@ -145,7 +141,6 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+
 
 
-'#filter-menu { left: 318px !important;}'+
 'div.comments { padding: 0px 0 0px 6px !important;}'+				
 '.item-comments {width: 24% !important;}} '+
 '#head { padding-left: 0px !important; z-index:200; } #stream-next, #stream-prev { z-index:122; top: auto !important; padding: 0 !important; bottom: 30% !important;} '+
@@ -159,7 +154,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'div.comment { border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
 '.vote-fav { left: 350px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
-'.side-wide-skyscraper { left: auto !important;}'+
+'.side-wide-skyscraper { display:none;}'+
 'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
 '.sorter, .sorter a { color: rgba(155, 155, 155, 1); font-size: 0.94em;}'+
 '#com-new { padding-left: 90px} #com-new, #com-top {  margin: 0px 3px;}'+
@@ -170,33 +165,40 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.pane, .pane-head, .tab-bar, .user-stats, .in-pane { width: 792px; margin: 0 auto !important;}'+
 '#random { display: block; position: relative; top: 18px; margin-left: 650px; height: 16px; width: 16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7ElEQVQ4je2SsUoDQRRFzyxilcJiq3QGEb/A3s7PCPZCfidGrPIDEgQ7sUinfSJEIWJnISJoJOyx8G1IIWym91Yz896587gz8K9UL9Qd4ATYbWCegIuU0tvqRC3VmZtrppYARXicAp2MyTvBrAxugGGGwTAYCrUL9IF74HwD+Cx6+2o3qVNgH/gCjoBD4BF4B7YC+gZawB5wB9wC28ADak9dRDgj9VJ9/iO4l6hfxX6h9gBQxxkvUGu8HuI8I8Ba83WDEbDMgJfB/P7EqqrKlNIx8AFMGuADoKVeF0XxCoDaVj/VQdPV6iB62wA/BoruHjilSCsAAAAASUVORK5CYII=);} '+
 '#random:hover { color: #ee4d2e; cursor: pointer;)}'+
-						'body { overflow-x:hidden; overflow-y: auto; }'+
-						'#page { padding-left: 0px !important; margin: 0 0 0 0 !important; width: 100% !important; position: absolute !important;}'+
-                      '#head { width: 100% !important }'+
+
+'body { overflow-x:hidden; overflow-y: auto; }'+
+'#page { padding-left: 0px !important; margin: 0 0 0 0 !important; width: 100% !important; position: absolute !important;}'+
+'#head { width: 100% !important }'+
+'div.comment-vote { left: 5px !important;}'+
 '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
-                                '.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
-                                'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
-                                'div.stream-row { clear: none !important; }'+
-                                '#main-view { max-width: 101% !important; width: 101% !important; }'+
-                                '.user-info { margin: 20px 30px 0 0 !important; }'+
-                                '#pr0gramm-logo { margin-left: 15px !important; }'+
-                                '.item-pointer { display: none !important; }'+
-								'#stream-prev {right: auto !important;}'+
-								'#stream-next { right: 0 !important; left: auto !important;}'+
-								'span.flags {padding-left: 120px; float: none !important;}'+
-								'.item-fullsize-link { right: 10px !important;}'+
-								'.item-container-content img { max-height: '+highitemimage+'px !important;}'+
-								'.item-image { max-height: '+highitemimage+'px !important; max-width: '+widthitemimage+'px !important;}'+
-								'video.item-image { width: auto;}'+
-				'.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
-                'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
-								'.head-menu { left: 200px; position: absolute;}'+
-								'div.in-pane { margin-left: -5px}'+
-								'#footer-links { top: 20px; left: auto !important; right: 270px !important; height: 20px; width:100px !important; bottom: 0px !important; margin: 0 !important}'+
-								'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
-                'div.item-vote { left: 180px;}'+
-				'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
-        '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
+'.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
+'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
+'div.stream-row { clear: none !important; }'+
+'#main-view { max-width: 101% !important; width: 101% !important; }'+
+'.user-info { margin: 20px 30px 0 0 !important; }'+
+'#pr0gramm-logo { margin-left: 15px !important; }'+
+'.item-pointer { display: none !important; }'+
+'#stream-prev {right: auto !important;}'+
+'#stream-next { right: 0 !important; left: auto !important;}'+
+'span.flags {padding-left: 120px; float: none !important;}'+
+'.item-fullsize-link { right: 10px !important;}'+
+'.item-container-content img { max-height: '+highitemimage+'px !important;}'+
+'.item-image { max-height: '+highitemimage+'px !important; max-width: '+widthitemimage+'px !important;}'+
+'video.item-image { width: auto;}'+
+'.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
+'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
+'.head-menu { left: 200px; position: absolute;}'+
+'div.in-pane { margin-left: -5px}'+
+
+'#filter-menu { left: 318px !important;}'+
+'#footer-links { line-height: 1.6 !important; text-align: center !important; top: 7px; left: auto !important; right: 270px !important; height: 20px; width: 260px !important; bottom: 0px !important; margin: 0 !important}'+
+'#footer-links a { color: rgb(238, 77, 46);}'+
+'#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
+'#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
+'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
+'div.item-vote { left: 180px;}'+
+'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
+'::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
   
 '.ssb_down {display:none;background:#000;bottom:0;cursor:pointer;position:absolute;right:0;}'+
 '.ssb_sb {border-radius: 7px; -webkit-border-radius: 7px; background: rgb(102, 102, 102); -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);cursor:pointer;position:absolute;right:0;}'+
@@ -232,25 +234,23 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;	
 	
 if (!window.indexedDB) {
-    window.alert("Ihr Browser unterstützt keine stabile Version von IndexedDB. Dieses und jenes Feature wird Ihnen nicht zur Verfügung stehen.");
+    window.alert("Dein Brauser unterstützt keine stabile Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen.");
 }
 
 function saveid() {
-	var ids = 0;
 	if ($('.item-image').length && window.location.pathname.match('/([0-9]{2,7})')) {
 		var db;
 		var open = indexedDB.open("UploadsSeen", 1);
 		open.onsuccess = function (evt) {
 			db = this.result;
-			//db = evt.target.result;
-			console.log("openDb DONE");
+			console.log("openDb Save DONE");
 				var uploadid = newurl.match('/([0-9]{2,7})');
 				var trans = db.transaction("uploads", "readwrite");
 				trans.onsuccess = function(evt) {
 					 console.log("trans saved: ", uploadid[1]);
 				};
 				trans.onerror = function(evt) {
-					console.log("trans Error:", evt.target.error.name);
+					//console.log("trans Error:", evt.target.error.name);
 				};
 				var store = trans.objectStore("uploads");
 				var requestAdd = store.add({id: uploadid[1], uploadid: uploadid[1]});	
@@ -258,7 +258,7 @@ function saveid() {
 					 console.log("ID saved: ", uploadid[1]);
 				};
 				requestAdd.onerror = function(evt) {
-					console.log("Save Error:", evt.target.error.name);
+					//console.log("Save Error:", evt.target.error.name);
 				};
 		};
 		open.onerror = function (evt) {
@@ -270,21 +270,22 @@ function saveid() {
 		  store.createIndex("uploadid", "uploadid", { unique: true });
 		};
 	}else if ($('#stream').length){
+		var ids = 0;
 		var db;
 		var open = indexedDB.open("UploadsSeen", 1);
 		open.onsuccess = function (evt) {
 			db = this.result;
-			console.log("openDb2 DONE");
+			console.log("openDb Read DONE");
 			var trans = db.transaction("uploads", "readonly");
 			var store = trans.objectStore("uploads");
+			//var index = store.Index('uploadid');
 			var first = $('.stream-row a:first').attr('id');
 			var last = $('#stream .stream-row:last').find('a:last').attr('id');
 			var range = IDBKeyRange.bound(last.slice(5), first.slice(5));
 			store.openCursor(range, 'prevunique').onsuccess = function(event) {
 				var cursor = event.target.result;
-
+				var value = parseInt(cursor.value.uploadid);
 				if (cursor) {
-					var value = parseInt(cursor.value.uploadid);
 					if ($('#item-' + value).children('div').length == 0) {
 						$('#item-' + value).append('<div class="seen" style="border-bottom: 1px solid  rgba(255, 72, 0, 0.84); height: 17px; background: none repeat scroll 0% 0% rgba(22, 22, 24, 0.7); position: relative; width: 128px; top: -17px;"><img style="opacity: 0.7; margin:auto; width:13px; padding-top: 1px;" src="http://i.imgur.com/CC4GAUc.png"></div>');
 					}
@@ -295,7 +296,7 @@ function saveid() {
 				}
 			};
 			store.openCursor(range, 'prevunique').onerror = function(event) {
-				console.log("Db2 Error: ", event);
+				console.log("Db Read Error: ", event);
 			};
 		};
 		open.onerror = function (evt) {
@@ -309,7 +310,6 @@ function saveid() {
 	}
 }
 
-window.onload = function() { setTimeout(function() { saveid();}, 600);};
 
 var oldurl = '';
 var newurl = '';
@@ -324,20 +324,28 @@ setInterval(function() {
 
 
 	setInterval(function() {
-
+		// Seite zentrieren links/rechts
+		if ($('div#stream').css('margin-left') == '0px') {
+			var mainwidth = $('#main-view' ).width();
+			var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
+			$('div#stream').css('margin-left', margin);
+		}
+	
+		// Random Button aktualisieren
 		var dingsda = document.getElementById('random');
 		if (dingsda.getAttribute('href') == '') {
 			insertButton();
 		}
       
-		// Bei Laden von neuem Content, saveid aufrufen
+		// Beim Laden von neuem Content, saveid aufrufen
         var loadingTargetNewer = 2048 / 2,
             loadingTargetOlder = $('#main-view').height() - 2048 + 400;
         var current = $(document).scrollTop();
-        if (current > loadingTargetOlder) {
+        if (current > loadingTargetOlder && current != 0) {
 			saveid();
         }	  
-	  
+		
+		// nur bei vorhandener direkter Bildansicht
 		if ($('.item-image').length) {
 
 		   // Scrollbar laden in den Comments
@@ -349,28 +357,37 @@ setInterval(function() {
 				 $('.item-comments:first').css('overflow', 'hidden');
 			  }
 		   }
-			
-		   $('.comments-head').fadeIn(300);
-		   $('.comment-form').fadeIn(300);
-		   $('.comments').fadeIn(300);
+		
+			// FadeIn Effekt für Kommentarspalte
+			if ($('.comments').length || !$('.comments').hasClass('loded')) {
+			   $('.comments-head').fadeIn(300);
+			   $('.comment-form').fadeIn(300);
+			   $('.comments').fadeIn(300);
+			   $('.comments').addClass('loded');
+			}
 		
 			if (!$('#com-new').hasClass('active') && !$('#com-top').hasClass('active')) {
-				$('#com-' + localStorage.getItem('comorder')).toggleClass('active');
+				if (localStorage.getItem("comorder") != null) {
+					$('#com-' + localStorage.getItem('comorder')).addClass('active');
+				}else{
+					$('#com-top').addClass('active');
+				}
 			}
-
+			
+			// Click Events für Sortierung einmalig einbinden
 			if ($('#com-new').length && !done) {
 				$('#com-new').click(function() {
 					localStorage.removeItem('comorder');
-					$(this).toggleClass('active');
-					$('#com-top').toggleClass('active');
+					$('#com-new').addClass('active');
+					$('#com-top').removeClass('active');
 					localStorage.setItem('comorder', 'new');
 					window.location.reload(true);
 					return false;
 				});
 				$('#com-top').click(function() {
 					localStorage.removeItem('comorder');
-					$(this).toggleClass('active');
-					$('#com-new').toggleClass('active');
+					$('#com-top').addClass('active');
+					$('#com-new').removeClass('active');
 					localStorage.setItem('comorder', 'top');
 					window.location.reload(true);
 					return false;
@@ -378,7 +395,7 @@ setInterval(function() {
 				done = true;
 			}  
 			
-			// + bei resized Bildern
+			// + bei resized Bildern hinzufügen
 			if (!$('.item-fullsize-link').length) {
 				var imgu = document.getElementsByClassName('item-image')[0]; 
 				if (imgu.naturalHeight > 460) {
@@ -388,7 +405,9 @@ setInterval(function() {
 			}
 			
 			var stil = document.getElementsByTagName('html')[0];
-			stil.style.overflow='hidden';
+			if (stil.style.overflow != 'hidden') {
+				stil.style.overflow = 'hidden';
+			}
 			
 			// zum passenden Thumb scrollen
 			var itemId = document.URL;
@@ -494,23 +513,19 @@ if (!e) return false;
 }
 
 
-// Code für den Random Button
-    function getElementByXpath(path) {
-      return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-     
+// Code für den Random Button     
     function getImage() {
-      var lastId = 666;
-      if (window.location.pathname == '/new') {
-        lastId = getElementByXpath('/html/body/div[2]/div[2]/div[1]/div[1]/a[1]').id;
-        lastId = lastId.split('-') [1];
-        //thx@Laura
-        localStorage.setItem('pr0lastId', lastId);
-      }
-      lastId = localStorage.getItem('pr0lastId');
+		var lastId = localStorage.getItem('pr0lastId');
+		if (!lastId) {
+			if ($('.stream-row a:first').length) {
+				lastId = $('.stream-row a:first').attr('id');
+			}else{
+				lastId = 137544;
+			}
+			localStorage.setItem('pr0lastId', lastId);
+		}
       return Math.floor((Math.random() * lastId) + 1);
     }
-    //r button einfügen
      
     function insertButton() {
       var div = document.getElementsByClassName('head-menu')[0];
@@ -630,6 +645,7 @@ var ssb = {
         // binding own onscroll event
         cont.onscroll = cont.ssb_onscroll;
 		var conte = document.getElementById('page');
+		//conte.onscroll = function() {alert("test");};
 		
 		//var elem = document.getElementById('#page');
 		//elem.onscroll = cont.ssb_onscroll;
@@ -723,9 +739,5 @@ var ssb = {
     }
 }
 
-// Seite zentrieren links/rechts
-	var mainwidth = $('#main-view' ).width();
-	var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
-	$('div#stream').css('margin-left', margin);
-		
+	
 })();
