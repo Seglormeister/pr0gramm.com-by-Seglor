@@ -1,4 +1,4 @@
-pr0gramm.com-by-Seglor 1.5.9.1
+pr0gramm.com-by-Seglor 1.5.9.2
 ======================
 
 ![bbbbbff](https://cloud.githubusercontent.com/assets/1558446/5594328/c8744afe-9247-11e4-9bbd-3ddb1022f2ea.PNG)
@@ -22,13 +22,14 @@ pr0gramm.user.js -> **Alte Version** (mit Bugs!) dient nur noch dazu, um die Upd
 
 ###Integrierte Veränderungen:
 
-- "Bereits gesehen"-Markierung der Uploads (beim Dick-Script)
+- "Bereits gesehen"-Markierung der Uploads, deaktivierbar (beim Dick-Script)
 - Custom Scrollbar in den Kommentaren (beim Dick-Script)
 - Vollbildansicht (beim Dick-Script)
 - Kommentarleiste links (beim Dick-Script)
 - Bilderwechsel mit dem Mausrad
 - Bildgröße an Bildschirm angepasst
 - Kommentare nach Zeit/Beliebtheit sortieren (beim Dick-Script)
+- Random Upload Button (beim Dick-Script)
 
 
 
