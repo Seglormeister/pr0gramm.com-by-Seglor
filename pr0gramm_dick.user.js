@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        pr0gramm.com Dick by Seglor
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author		Seglormeister
+// @author	Seglormeister
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
-// @version     1.5.9.2
+// @version     1.5.9.3
 // @grant       none
-// @require		  http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
@@ -130,7 +130,7 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
         if (this.jumpToItem) {
             var target = $('#item-' + this.jumpToItem);
             if (target.length) {
-			//alert("scrolltop");
+			alert("scrolltop");
                 $(document).scrollTop(target.offset().top - CONFIG.HEADER_HEIGHT);
                 this.showItem(target);
             }
@@ -205,7 +205,7 @@ var wheelLast = 0;
 		var widthitemimage = $(window).width()-600;
 
 // Random Button und Bereits gesehen Button	
-$('.head-menu').append('<a class="link" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
+$('#head-menu').append('<a class="link" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
 
 /****/// CSS
 var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
@@ -227,7 +227,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+			
 '.item-comments {width: 24% !important;}} '+
 
-'#head { padding-left: 0px !important; z-index:200; } #stream-next, #stream-prev { z-index:122; top: auto !important; padding: 0 !important; bottom: 30% !important;} '+
+'#head { padding-left: 0px !important; z-index:200; } .stream-next, .stream-prev { z-index:122; top: auto !important; padding: 0 !important; bottom: 30% !important;} '+
 '.item-comments { position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
 '.item-comments textarea.comment { resize: none;}'+
 'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}'+		
@@ -261,6 +261,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 'body { overflow-x:hidden; overflow-y: auto; }'+
 '#page { padding-left: 0px !important; margin: 0 0 0 0 !important; width: 100% !important; position: absolute !important;}'+
+'body.two-sidebars div#head, body.two-sidebars div#page { padding: 0 !important;}'+
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
@@ -271,16 +272,17 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.user-info { margin: 20px 30px 0 0 !important; }'+
 '#pr0gramm-logo { margin-left: 15px !important; }'+
 '.item-pointer { display: none !important; }'+
-'#stream-prev {right: auto !important;}'+
-'#stream-next { right: 0 !important; left: auto !important;}'+
+'.stream-prev {right: auto !important;}'+
+'.stream-next { right: 0 !important; left: auto !important;}'+
 'span.flags {padding-left: 120px; float: none !important;}'+
-'.item-fullsize-link { right: 10px !important;}'+
+'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
+'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
 '.item-container-content img { max-height: '+highitemimage+'px;}'+
 '.item-image { max-height: '+highitemimage+'px; max-width: '+widthitemimage+'px !important;}'+
 'video.item-image { width: auto;}'+
-'.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
+'div.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
 'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
-'.head-menu { left: 200px; position: absolute;}'+
+'#head-menu { left: 200px; position: absolute;}'+
 'div.in-pane { margin-left: -5px}'+
 
 '#filter-menu { left: 318px !important;}'+
@@ -329,6 +331,11 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 if (!window.indexedDB) {
     window.alert("Dein Brauser unterstützt keine stabile Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen.");
 }
+
+// DB löschen
+//var request = indexedDB.deleteDatabase("UploadsSeen");
+//request.onsuccess = function() { console.log("DB gelöscht"); };
+//request.onerror = function() { console.log("DB NICHT gelöscht"); };
 
 
 function saveid() {
@@ -415,7 +422,7 @@ function add_seen_marker() {
 	if (!$('.seen_marker').length && $('#brille').hasClass('active')) {
 		var id = newurl.match('/([0-9]{2,7})');
 		if ($('#item-' + id[1] + ' > div.seen').length) {
-			$('.item-container-content').append('<span class="seen_marker" style="right: 80px; position: absolute; top: 20px;padding-left: 120px; color: #A7D713;">[Bereits gesehen]</span>');
+			$('.item-container-content').append('<span class="seen_marker" style="font-size: 0.8em; right: 80px; position: absolute; top: 20px;padding-left: 120px; color: #A7D713;">[Bereits gesehen]</span>');
 		}
 	}
 }
@@ -527,7 +534,6 @@ setInterval(function() {
 			if ($('.comments').height() > ($('.item-comments').height()-230)) {
 				//s$('div.comments').attr('style', 'margin-right: 12px');
 			}
-
 		
 			// FadeIn Effekt für Kommentarspalte
 			if (!$('.comments').hasClass('loded') && $('.comments').length) {
@@ -687,9 +693,9 @@ function handleWheel(event) {
         }
 		
         if(delta<0){
-            $('#stream-next').click();
+            $('.stream-next').click();
 		}else{
-            $('#stream-prev').click();
+            $('.stream-prev').click();
 		}
 	}
 }
@@ -809,6 +815,8 @@ var ssb = {
                this.ratio = this.offsetHeight / ($('.comments').outerHeight(true) + 128);//187+33
 			}else{
 				this.ratio = ($(window).height()-52) / ($('.comments').outerHeight(true) + 187 + 53); //#main-view
+				//this.st.style.height =  $('#main-view').height() + 'px';
+				//this.sb.style.height = Math.ceil(this.ratio * 666) + 'px';
 			}
                this.sb.style.top = Math.floor(this.scrollTop * this.ratio) + 'px';
            //}
@@ -824,9 +832,7 @@ var ssb = {
         // binding own onscroll event
         cont.onscroll = cont.ssb_onscroll;
 		var conte = document.getElementById('page');
-		//conte.onscroll = function() {alert("test");};
 		
-		//var elem = document.getElementById('#page');
 		//elem.onscroll = cont.ssb_onscroll;
         return cont;
     },
@@ -870,7 +876,7 @@ var ssb = {
             o.ssb_onscroll();
             o.sb.style.width = o.su.style.width = o.su.style.height = o.sd.style.width = o.sd.style.height = o.sw + 'px';
 			o.st.style.width = (o.sw + 6) + 'px';
-			o.st.style.height =  $(window).height() - 51 + 'px';
+			o.st.style.height =  $(window).height() - 51 + 'px'; //'#main-view'
             o.sb.style.height = Math.ceil(o.ratio * 666) + 'px';
 			o.sb.style.right = '3px';
         }
@@ -916,6 +922,7 @@ var ssb = {
         ssb.asd.sg = false;
     }
 }
+
 
 		
 })();
