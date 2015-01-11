@@ -7,7 +7,6 @@ Willkommen ihr fags
 
 Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten.
 
-**Updated sich automatisch**
 
 > [pr0gramm_dick.user.js](https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js) **->** Breitbild/old pr0gramm
  
