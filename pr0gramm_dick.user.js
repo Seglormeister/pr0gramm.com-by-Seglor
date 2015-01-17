@@ -3,6 +3,7 @@
 // @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
 // @author	Seglormeister
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
+// @icon	http://pr0gramm.com/media/pr0gramm-favicon.png
 // @include     http://pr0gramm.com/*
 // @version     1.5.9.3
 // @grant       none
