@@ -1,6 +1,4 @@
-### ZUR ZEIT LEIDER KEINE UPDATES UND FIXES, ERST IN EIN PAAR WOCHEN, WENN ICH WIEDER MEHR ZEIT HABE. DANN WIRD ALLERDINGS BALD EBENFALLS EIN NEUES FIREFOX ADDON DAZU FOLGEN!
-
-pr0gramm.com-by-Seglor 1.5.9.3
+pr0gramm.com-by-Seglor 1.5.9.4
 ======================
 
 ![bbbbbff](https://cloud.githubusercontent.com/assets/1558446/5594328/c8744afe-9247-11e4-9bbd-3ddb1022f2ea.PNG)
@@ -19,14 +17,17 @@ pr0gramm.user.js -> **Alte Version** (mit Bugs!) dient nur noch dazu, um die Upd
 
 ###Integrierte Veränderungen:
 
+- Erweiterte Kommentaransicht
 - "Bereits gesehen"-Markierung der Uploads, deaktivierbar
 - Custom Scrollbar in den Kommentaren
-- Vollbildansicht
+- Fullscreenansicht
 - Kommentarleiste links
 - Bilderwechsel mit dem Mausrad
 - Bildgröße an Bildschirm angepasst
 - Kommentare nach Zeit/Beliebtheit sortieren
 - Random Upload Button
+- OP Kennzeichnung in Kommentaren (Neu!)
+- Bessere Lesbarkeit der Kommentare durch Farben (Neu!)
 
 
 
