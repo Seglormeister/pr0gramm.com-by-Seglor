@@ -555,37 +555,6 @@ observeDOM(
 				break;
 			}
 		});
-		
-		// Thumb Markierungen hinzufügen
-        for (var e = 0; e < elements.length; e++) {
-            for (var i = 0; i < elements[e].addedNodes.length; i++) {
-                if (elements[e].addedNodes[i].className != 'date-label' && elements[e].addedNodes[i].childNodes.length > 0 && elements[e].addedNodes[i].className.indexOf('stream-row') > -1) {
-                    var thumbs = elements[e].addedNodes[i].getElementsByTagName('a');
-                    for (var j = 0; j < thumbs.length; j++) {
-                        if (thumbs[j].id != '') {
-                            thumbs[j].style.position = 'relative';
-                            var lbl = label.cloneNode(false),
-                                item = window.p.currentView.stream.items[thumbs[j].id.substr(5)],
-                                date = new Date(item.created * 1000),
-                                benis = item.up - item.down;
-								if (item.flags == 1) flag = 'flags flags-1', flagname = 'SFW';
-								else if (item.flags == 2) flag = 'flags flags-2', flagname = 'NSFW';
-								else if (item.flags == 4) flag = 'flags flags-4', flagname = 'NSFL';
-								
-                            lbl.textContent = date.getHours() + ':' + date.getMinutes() + ' (' + (benis >= 0 ? '+'+benis : benis) + ')';
-							thumbs[j].insertBefore(lbl, null);
-							var lbl2 = document.createElement('span');
-							lbl2.className = flag;
-							lbl2.textContent = flagname;
-							var style = document.createAttribute("style"); 
-							style.value = 'color: #FFF !important; margin-left: 20px; font-size:11px; padding: 0px 5px;';
-							lbl2.setAttributeNode(style);
-							lbl.appendChild(lbl2);
-                        }
-                    }
-                }
-            }
-        }
 
     },
     true
