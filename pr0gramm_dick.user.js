@@ -4,7 +4,7 @@
 // @author	Seglormeister
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
-// @version     1.5.9.3
+// @version     1.5.9.4
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -130,7 +130,6 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
         if (this.jumpToItem) {
             var target = $('#item-' + this.jumpToItem);
             if (target.length) {
-			alert("scrolltop");
                 $(document).scrollTop(target.offset().top - CONFIG.HEADER_HEIGHT);
                 this.showItem(target);
             }
@@ -141,8 +140,16 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
 }
 
 
-// Comments sortieren	
-p.View.Stream.Comments.prototype.template = '<div class="comments-head" style="display:none"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} </div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form style="display:none" class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div style="display:none" class="comments"> <?js var recurseComments = function( comments, level ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { recurseComments(c.children, level+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1); ?> </div> ';
+p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span> <?js } ?> </div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
+    
+p.opClass = function(currentOp, currentUser) {
+	if(!currentOp || !currentUser)
+	return "";
+	return currentOp == currentUser ? " opuser" : "";
+};
+
+// Comments Template	
+p.View.Stream.Comments.prototype.template = '<div class="comments-head" style="display:none"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form style="display:none" class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div style="display:none" class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}{p.opClass(itemOp,c.name)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
  
 p.View.Stream.Comments.SortTime = function(a, b) {
     return (b.created - a.created);
@@ -170,6 +177,7 @@ p.View.Stream.Comments.prototype.loaded = function(item) {
         this.data.commentCount = item.comments.length;
         this.data.tab = this.parentView.parentView.tab || 'new';
         this.data.itemId = item.id;
+		this.data.itemOp = item.user || null;
         this.render();
 }
 
@@ -193,9 +201,6 @@ p.View.Stream.Comments.prototype.showReplyForm = function(ev) {
 }
 
 
-var zweiter = false;
-var done = false;
-var done_seen, insert_once = false;
 var spacepressed = false;
 var wheelLast = 0;
 
@@ -204,8 +209,9 @@ var wheelLast = 0;
 		var highcontainer = $(window).height()-52;
 		var widthitemimage = $(window).width()-600;
 
-// Random Button und Bereits gesehen Button	
-$('#head-menu').append('<a class="link" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
+// Random Button und Bereits gesehen Button einfügen
+var valueseen = localStorage.getItem('alreadyseen')=='on'? 'active': '';
+$('#head-menu').append('<a class="link '+valueseen+'" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
 
 /****/// CSS
 var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }'+
@@ -225,23 +231,40 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.ui-slider .ui-slider-handle { cursor: default; height: 1.2em; position: absolute; width: 1.2em; z-index: 2;}'+
 '#slider { float: left; clear: left; width: 300px; margin: 30px 15px 5px; }#slider .ui-slider-range { background: #EE4D2E; } #slider .ui-slider-handle { border-color: #EE4D2E; }'+
 '@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+			
-'.item-comments {width: 24% !important;}} '+
+'.item-comments {width: 23% !important;}} '+
+'div.item-details {padding: 8px 0px 8px 50px;}'+
 
-'#head { padding-left: 0px !important; z-index:200; } .stream-next, .stream-prev { z-index:122; top: auto !important; padding: 0 !important; bottom: 30% !important;} '+
+'#head { padding-left: 0px !important; z-index:200; }'+
+'.stream-next, .stream-prev { padding: 200px 0 0 !important; margin: 200px 0px 0px !important; position: fixed !important; color: rgba(245, 247, 246, 0.29) !important; font-size: 38px !important; }'+
+'.stream-next:hover, .stream-prev:hover { color: rgba(238, 77, 46, 1.0) !important; }'+
+'.stream-prev { left: 24% !important;}'+
 '.item-comments { position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
-'.item-comments textarea.comment { resize: none;}'+
+'.item-comments textarea.comment { resize: none; box-shadow: 0 0 0 2px rgba(72, 72, 72, 0.36);}'+
 'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}'+		
 
 
 '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; -webkit-transform: translateX(-400px);} 100% { opacity: 1; -webkit-transform: translateX(0); } }'+
 '@keyframes fadeInLeft { 0% { opacity: 1; transform: translateX(-400px);} 100% { opacity: 1; transform: translateX(0); } }'+
 '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}'+
+'.commentview { background: url("http://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
+'.commentview:hover { background: url("http://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
+'div.item-comments.wide { width: 40% !important;}'+
+'div.item-container-content.wide { padding-left: 40% !important;}'+
+'div.item-container-content.wide .item-image-wrapper { max-width: 90% !important;}'+
+'div.item-container-content.wide .item-image { max-width: 100% !important;}'+
+'div.item-container-content.wide .stream-prev { left: 40% !important;}'+
 
-
+'span.vote-fav.wide { left: 130px !important; top: 0px !important;}'+
+'.commentfarbe1 { border-left: 2px solid rgb(51, 52, 150) !important;}'+
+'.commentfarbe2 { border-left: 2px solid rgba(48, 221, 22, 0.72) !important;}'+
+'.commentfarbe3 { border-left: 2px solid rgba(254, 142, 17, 0.64) !important;}'+
+'.commentfarbe4 { border-left: 2px solid rgba(245, 0, 0, 0.77) !important;}'+
+'.commentfarbe5 { border-left: 2px solid rgba(167, 22, 221, 0.72) !important;}'+
+'.opuser .user:before { content: \'OP\'; color: #FFF; padding: 1px 3px; vertical-align: baseline; font-weight: bold; border-radius: 0.25em; background-color: rgb(238, 77, 46); margin-right: 5px; }'+
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
 'div.comment { border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
-'.vote-fav { left: 350px !important; top: 20px !important;}'+
+'.vote-fav { left: 230px !important; top: 20px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
 '.side-wide-skyscraper { display:none;}'+
 'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
@@ -256,8 +279,9 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 '#random:hover { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAARCQAAEQkAGJrNK4AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEaSURBVHjazNO/K8RxHMfxx/fuCAtXSseEklLHcKJuNOosykLZbP4BA5N/wHCLxZ9gYbAoPzYSyuTHYCE6UkK6zvK5+k7uDoPX8unz4/38vF593p+oUqn4rRL+QP8HEpUK2fh8AaNIflNTxgmK1YVUbHMJqw0Y6MJKPM5UgwBYxkwc0oHXBiHvaK9CInwgh806AVsYwQuSKewjj0PMYhwPuMZjuLEFafQig0WsYwJHKYwFeh7TGMQQOkPMpvAiTwF+gbkAgFxUKmSHsY1uvOEWA99EuQpu2nCPyQROsRMOtNYAQH8AwC6OE7EG+onK8WYroie46Kuj+AaXWItDzrGHA2zUcBZhPoxn8b+TRgmfaK7DyXNotAzuvgYAbyA4nkq8OzEAAAAASUVORK5CYII=); cursor: pointer;}'+
 '#brille { float: right; margin-left: 10px; margin-top: 2px; height: 17px; width: 17px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEJSURBVHjanNStSwRBGMfxzy4LokGLYNBgsYhNQTAaNIhBMFhNxgtaNZiEKxZFDCarcMEqJjH48gf4D4ggF4TdDXJoGY9jce8cn/K8zpeZ4TeT5GUB4zjAtL/bG5p4yQLgEqvibRFbSV4WF9jGCU4jAOs4QivJy+IGyxjDR+ROvnCXIg+FyUjAaPBl2lNMIiHd+TRi0T5KjFQbdZA9LPXkDRziHp/V4awG0gx+Ams4xhU2fxuugyzgMQgKrusA/Y7zhPkQPwRN1FrWp/cc+p1BN55WhFO1zgChdSHDIX6N1MmPuocytEOyg7MIyErwRZKXxQxamP3HK25jIwn/yRx2MRUBeMc5br8HAIJvOCo2x8ekAAAAAElFTkSuQmCC);}'+
-'#brille:hover, #brille.active { cursor: pointer; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEHSURBVHjanNO/K8VhFMfx1719SwwmMlAsFsNdKOUPYNAdlOI/MN6BSTEoJXexkMxWZfAXWAx+jAb+ACl9B8UdpGs59O12v5fHWc6Pz3nePefpPJW8XoMhbGPC3+0ZTTxkATjFgnSbxWqG/QAc4igBUMcedjOMR3ETrwmQ+4AMV/EWxdHEUQbDt6qFYiUR8tNfTTi0hRYGOoUyyAbmCnkDO7jCR2dzVgJphh/BIg5whuVuzWWQGdzEQsFFGaDXOLeYjvg6dqLUsh7aXeifv7148SbtLnovQLsI6Y/4KXFPvre7L0MeyRqOEyDz4d8reb02iXNM/eMX51jK8IgVrGMsAfCCE1x+DQDslCyF2ZAs+QAAAABJRU5ErkJggg==);)}'+
-'#brille.active:hover { cursor: pointer; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEJSURBVHjanNStSwRBGMfxzy4LokGLYNBgsYhNQTAaNIhBMFhNxgtaNZiEKxZFDCarcMEqJjH48gf4D4ggF4TdDXJoGY9jce8cn/K8zpeZ4TeT5GUB4zjAtL/bG5p4yQLgEqvibRFbSV4WF9jGCU4jAOs4QivJy+IGyxjDR+ROvnCXIg+FyUjAaPBl2lNMIiHd+TRi0T5KjFQbdZA9LPXkDRziHp/V4awG0gx+Ams4xhU2fxuugyzgMQgKrusA/Y7zhPkQPwRN1FrWp/cc+p1BN55WhFO1zgChdSHDIX6N1MmPuocytEOyg7MIyErwRZKXxQxamP3HK25jIwn/yRx2MRUBeMc5br8HAIJvOCo2x8ekAAAAAElFTkSuQmCC);}'+
+'#brille.active { cursor: pointer; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEHSURBVHjanNO/K8VhFMfx1719SwwmMlAsFsNdKOUPYNAdlOI/MN6BSTEoJXexkMxWZfAXWAx+jAb+ACl9B8UdpGs59O12v5fHWc6Pz3nePefpPJW8XoMhbGPC3+0ZTTxkATjFgnSbxWqG/QAc4igBUMcedjOMR3ETrwmQ+4AMV/EWxdHEUQbDt6qFYiUR8tNfTTi0hRYGOoUyyAbmCnkDO7jCR2dzVgJphh/BIg5whuVuzWWQGdzEQsFFGaDXOLeYjvg6dqLUsh7aXeifv7148SbtLnovQLsI6Y/4KXFPvre7L0MeyRqOEyDz4d8reb02iXNM/eMX51jK8IgVrGMsAfCCE1x+DQDslCyF2ZAs+QAAAABJRU5ErkJggg==);)}'+
+'#brille:hover { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEHSURBVHjanNO/K8VhFMfx1719SwwmMlAsFsNdKOUPYNAdlOI/MN6BSTEoJXexkMxWZfAXWAx+jAb+ACl9B8UdpGs59O12v5fHWc6Pz3nePefpPJW8XoMhbGPC3+0ZTTxkATjFgnSbxWqG/QAc4igBUMcedjOMR3ETrwmQ+4AMV/EWxdHEUQbDt6qFYiUR8tNfTTi0hRYGOoUyyAbmCnkDO7jCR2dzVgJphh/BIg5whuVuzWWQGdzEQsFFGaDXOLeYjvg6dqLUsh7aXeifv7148SbtLnovQLsI6Y/4KXFPvre7L0MeyRqOEyDz4d8reb02iXNM/eMX51jK8IgVrGMsAfCCE1x+DQDslCyF2ZAs+QAAAABJRU5ErkJggg==);)}'+
+
 
 'body { overflow-x:hidden; overflow-y: auto; }'+
 '#page { padding-left: 0px !important; margin: 0 0 0 0 !important; width: 100% !important; position: absolute !important;}'+
@@ -265,16 +289,14 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
-'.item-container-content { padding-left: 200px !important; display: table-cell; vertical-align: middle;}'+
+'.item-container-content { padding-left: 23%; display: table-cell; vertical-align: middle;}'+
 'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
 '.user-info { margin: 20px 30px 0 0 !important; }'+
 '#pr0gramm-logo { margin-left: 15px !important; }'+
 '.item-pointer { display: none !important; }'+
-'.stream-prev {right: auto !important;}'+
-'.stream-next { right: 0 !important; left: auto !important;}'+
-'span.flags {padding-left: 120px; float: none !important;}'+
+'span.flags {margin-left: 120px; float: none !important; color: #FFF !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}'+
 'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
 'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
 '.item-container-content img { max-height: '+highitemimage+'px;}'+
@@ -286,12 +308,12 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'div.in-pane { margin-left: -5px}'+
 
 '#filter-menu { left: 318px !important;}'+
-'#footer-links { line-height: 1.6 !important; text-align: center !important; top: 7px; left: auto !important; right: 270px !important; height: 20px; width: 160px !important; bottom: 0px !important; margin: 0 !important}'+
+'#footer-links { line-height: 1.6 !important; text-align: center !important; top: 7px; left: auto !important; right: 340px !important; height: 20px; width: 160px !important; bottom: 0px !important; margin: 0 !important}'+
 '#footer-links a { color: rgb(238, 77, 46);}'+
 '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
 '#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
 '.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
-'div.item-vote { left: 180px;}'+
+'div.item-vote { left: 80px;}'+
 '::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
 '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
   
@@ -323,29 +345,23 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 	
   
 // INDEXEDDB
-	
 window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;	
 	
 if (!window.indexedDB) {
-    window.alert("Dein Brauser unterstützt keine stabile Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen.");
+    window.alert("Dein Brauser unterstützt keine Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen. Das pr0gramm mag dich trotzdem.");
 }
 
-// DB löschen
-//var request = indexedDB.deleteDatabase("UploadsSeen");
-//request.onsuccess = function() { console.log("DB gelöscht"); };
-//request.onerror = function() { console.log("DB NICHT gelöscht"); };
-
-
 function saveid() {
+	console.log('saveid');
 	if ($('.item-image').length && window.location.pathname.match('/([0-9]{2,7})')) {
 		var db;
 		var open = indexedDB.open("UploadsSeen", 1);
 		open.onsuccess = function (evt) {
 			db = this.result;
 			console.log("openDb Save DONE");
-				var uploadid = newurl.match('/([0-9]{2,7})');
+				var uploadid = window.location.pathname.match('/([0-9]{2,7})');
 				var trans = db.transaction("uploads", "readwrite");
 				trans.onsuccess = function(evt) {
 					 console.log("trans saved: ", uploadid[1]);
@@ -372,38 +388,48 @@ function saveid() {
 		  store.createIndex("uploadid", "uploadid", { unique: true });
 		};
 	}
-	if ($('#stream').length){
+}
+
+function show_seenids() {
+	console.log('show_seenids');
+	if ($('#stream').length) {
 		var ids = 0;
 		var db;
 		var open = indexedDB.open("UploadsSeen", 1);
 		open.onsuccess = function (evt) {
 			db = this.result;
-			console.log("openDb Read DONE");
+			console.log("show_seenids: openDb Read DONE");
 			var trans = db.transaction("uploads", "readonly");
 			var store = trans.objectStore("uploads");
 			//var index = store.Index('uploadid');
-			var first = $('.stream-row a:first').attr('id');
+			if (window.location.pathname.match('/(top)')) {
+				var first = 'item-999999';
+			}else{
+				var first = $('.stream-row a:first').attr('id');
+			}
 			var last = $('#stream .stream-row:last').find('a:last').attr('id');
 			if (!first || !last) {
-				return saveid();
+				//return saveid();
 			}
 			var range = IDBKeyRange.bound(last.slice(5), first.slice(5));
 			store.openCursor(range, 'prevunique').onsuccess = function(event) {
 				var cursor = event.target.result;
 				var value = parseInt(cursor.value.uploadid);
 				if (cursor) {
-					if ($('#item-' + value).children('div').length == 0) {
+					
+					if ($('#item-' + value).children('div.seen').length == 0) {
 						$('#item-' + value).append('<div class="seen" style="border-bottom: 1px solid  rgba(255, 72, 0, 0.84); height: 17px; background: none repeat scroll 0% 0% rgba(22, 22, 24, 0.7); position: relative; width: 128px; top: -17px;"><img style="opacity: 0.7; margin:auto; width:13px; padding-top: 1px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADRSURBVHjajNI9TgJRFMXx3+AgxMpIjI1hD5TExC1AZ0dhS2FtIpXaU7EBKiiMrsDKxIqCBZgYNkDDDAV+NI9kMoFhTndvzj/33PdutEoT6KOHI/v1izc8x7jDEAukBdAxnlCLVmnyFRqXDusDFzGWqCmnJaqVkDUuMHbQzET8q+QMJ2hl6ke84jRryk84xwy3qOMBV5gXQd+4wSTUbXzm8+7aZYoN1ruALRThJ9d/2fMomy10FsAyqqMRY4xB+LjkwEVcYxSF27tHt8Skdwz+BwAIXSigFHjUGwAAAABJRU5ErkJggg=="></div>');
 					}
 					ids++;
 					cursor.continue();
 				}else{
-					console.log("No more entries!", ids);
-					add_seen_marker();
+					// wird nicht aufgerufen
+					console.log("show_seenids: No more entries!", ids);
+					//add_seen_marker();
 				}
 			};
 			store.openCursor(range, 'prevunique').onerror = function(event) {
-				console.log("Db Read Error: ", event);
+				console.log("show_seenids: Db Read Error: ", event);
 			};
 		};
 		open.onerror = function (evt) {
@@ -413,134 +439,160 @@ function saveid() {
 		  console.log("openDb.onupgradeneeded");
 		  var store = evt.target.result.createObjectStore( "uploads", { keyPath: "id"});
 		  db = evt.target.result;
-		};	
+		};
 	}
 }
 
 // bereits gesehen Markierung laden
 function add_seen_marker() {
 	if (!$('.seen_marker').length && $('#brille').hasClass('active')) {
-		var id = newurl.match('/([0-9]{2,7})');
+		var id = window.location.pathname.match('/([0-9]{2,7})');
 		if ($('#item-' + id[1] + ' > div.seen').length) {
 			$('.item-container-content').append('<span class="seen_marker" style="font-size: 0.8em; right: 80px; position: absolute; top: 20px;padding-left: 120px; color: #A7D713;">[Bereits gesehen]</span>');
 		}
 	}
 }
 
+var inbox = document.getElementById('inboxLink'),
+    b = document.createElement('span'),
+    getCookie = function(name) {
+        var value = "; " + document.cookie,
+            parts = value.split("; " + name + "=");
+        if (parts.length == 2) {
+            return parts.pop().split(";").shift();
+        }
+    },
+    get = function (url, success, error) {
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
 
-var oldurl = '';
-var newurl = '';
-setInterval(function() {
-	if ($('#brille').hasClass('active')) {
-		newurl = window.location.pathname;
-		if (oldurl != newurl) {
-			// url change
-			saveid();
-			add_seen_marker();	
-			if ($('#stream').length) {
-				$('.stream-row a').click(function() {
-					if (!$('.item-comments:first').hasClass('fadeInLeft')) {
-						$('.item-comments:first').addClass('fadeInLeft');
-						$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'}); 
-					}
-				});
-			}
-			oldurl = newurl;
-		}
-	}
-}, 100);
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var data = JSON.parse(request.responseText);
+                success(data);
+            } else {
+            }
+        };
 
+        request.onerror = function() {
+          error();
+        };
 
-	setInterval(function() {
-		// Bereits gesehen Button
-			if ($('#brille').length && !done_seen) {
-				if (localStorage.getItem('alreadyseen') != 'off') {
-					$('#brille').addClass('active');
-				}
-				$('#brille').click(function() {
-					if (localStorage.getItem('alreadyseen') == 'off') {
-						$('.seen').css('display', 'block');
-						$('.seen_marker').css('display', 'block');
-						localStorage.removeItem('alreadyseen');
-						$('#brille').addClass('active');
-						saveid();
-					}else{
-						localStorage.setItem('alreadyseen', 'off');
-						$('#brille').removeClass('active');
-						$('.seen').css('display', 'none');
-						$('.seen_marker').css('display', 'none');
-					}
-					return false;
-				});
-				done_seen = true;
-			}
-			
-		// FadeIn Effekt aus Übersicht
-		if ($('.stream-row').length) {
-			scrolled = check_if_scrolled();
-			if (scrolled) {
-				$('.stream-row a').click(function() {
-					if (!$('.item-comments:first').hasClass('fadeInLeft')) {
-						$('.item-comments:first').addClass('fadeInLeft');
-						$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'}); 
-					}
-				});
-			}else if (!insert_once) {
-					$('.stream-row a').click(function() {
-							if ($('.item-comments').length) {
-								$('.item-comments:first').addClass('fadeInLeft');
-								$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'}); 
-							}
-					});
-					insert_once = true;
-			}
-		}
-		
-		// Seite zentrieren links/rechts
-		if ($('div#stream').css('margin-left') == '0px') {
-			var mainwidth = $('#main-view' ).width();
-			var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
-			$('div#stream').css('margin-left', margin);
-		}
-		
-		// Random Button aktualisieren
-		if (document.getElementById('random').getAttribute('href') == '') {
-			prepareButton();
-		}
-      
-		// Beim Laden von neuem Content saveid aufrufen
-		if ($('#brille').hasClass('active')) {
-			scrolled = check_if_scrolled();
-			if (scrolled && $('#stream').length && !$('.item-image').length) {
-				saveid();
-			}
-		}
-		
-		// nur bei vorhandener direkter Bildansicht
-		if ($('.item-image').length) {
+        request.send();
+    },
+    update = function() {
+        var me = JSON.parse(unescape(getCookie('me')));
+        get('http://pr0gramm.com/api/user/info?self=true&flags=7&name=' + escape(me.n), function(data){
+            b.innerHTML = data.user.score;
+        });
+    };
 
-		   // Scrollbar laden in den Comments
-		   if ($('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
-			  if ($('.comments').height() > ($('.item-comments').height()-230)) {
-				 ssb.scrollbar('item-comments');
-				 $('.item-comments').addClass('scroll');
-				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
-				 $('.item-comments:first').css('overflow', 'hidden');
-				 if ($('.item-comments:first)').hasClass('fadeInLeft')) {
-					$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
-				 }
-			  }
-		   }
-			if ($('.comments').height() > ($('.item-comments').height()-230)) {
-				//s$('div.comments').attr('style', 'margin-right: 12px');
+// Observer für Seitenänderung
+    observeDOM = (function(){
+        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+            eventListenerSupported = window.addEventListener;
+
+        return function(obj, callback, subtree){
+            if( MutationObserver ){
+                var obs = new MutationObserver(function(mutations, observer){
+                    if (mutations[0].addedNodes.length || mutations[0].removedNodes.length){
+                        callback(mutations);
+                    }
+                });
+                obs.observe(obj, {
+                    childList: true, 
+                    subtree: subtree
+                });
+            }
+            else if( eventListenerSupported ){
+                obj.addEventListener('DOMNodeInserted', callback, false);
+                obj.addEventListener('DOMNodeRemoved', callback, false);
+            }
+        }
+    })();
+
+label = document.createElement('div');
+b.style.cssText = 'background-image: url("http://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
+var attr = document.createAttribute("title"); 
+attr.value = 'Dein Benis';
+b.setAttributeNode(attr);
+label.className = 'date-label';
+label.style.cssText = 'position: absolute; left: 0px; right: 0px; bottom: 0px; text-align: center; font-size: 10px; color: #FFFFFF !important; text-shadow: 1px 1px 0px black, 1px -1px 0px black, -1px 1px 0px black, -1px -1px 0px black; background-color: rgba(0,0,0,.5);';
+inbox.parentNode.insertBefore(b, inbox);
+update();
+setInterval(update, 40000);
+
+observeDOM(
+    document.getElementById('page'),
+    function(elements){
+		$.each(elements, function(idx, obj) {
+			var test = jQuery(obj.target);
+			var value = test[0].id || test[0].className;
+			//console.log(obj.target);
+			switch(value) {
+				case "main-view":
+					console.log('header geladen');
+					headerchange();
+				break;
+				case "stream":
+					//console.log('neue thumbs geladen');
+					streamchange();
+				break;
+				case "item-container":
+					//console.log('neues Bild geöffnet');
+					imagechange();
+					//commentschange();
+				break;
+				case "item-comments":
+					//console.log('Comments geladen');
+					commentschange();
+				break;
+				case "item-comments fadeInLeft":
+					//console.log('Comments geladen');
+					commentschange();
+				break;
 			}
+		});
 		
+    },
+    true
+);
+
+function commentschange() {
 			// FadeIn Effekt für Kommentarspalte
 			if (!$('.comments').hasClass('loded') && $('.comments').length) {
 					$('.comments-head').fadeIn(300);
 				    $('.comment-form').fadeIn(300);
 				    $('.comments').fadeIn(300);
 					$('.comments').addClass('loded');
+			}
+			
+		   // Scrollbar laden in den Comments
+		   if ($('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
+			  if ($('.comments').height() > ($('.item-comments').height()-130)) {
+				 ssb.scrollbar('item-comments');
+				 $('.item-comments').addClass('scroll');
+				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
+				 $('.item-comments:first').css('overflow', 'hidden');
+				 //if ($('.item-comments:first').hasClass('fadeInLeft')) {
+					//$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+				 //}
+			  }
+		   }
+		
+			// Kommentaransicht ändern
+			if ($('.item-comments').length) {
+				$('span.commentview').click(function() {
+					$("div.item-container-content").toggleClass("wide");
+					$("div.item-comments").each(function(index) {
+						$(this).toggleClass("wide");
+					});
+					
+					$("span.vote-fav").toggleClass("wide");
+					var value = $("div.item-container-content").hasClass("wide") ? 'wide' : 'normal';
+					localStorage.setItem('commentview', value);
+					return false;
+				});
 			}
 		
 			// Kommentarsortierung laden
@@ -553,7 +605,7 @@ setInterval(function() {
 			}
 			
 			// Click Events für Sortierung einmalig einbinden
-			if ($('#com-new').length && !done) {
+			if ($('#com-new').length) {
 				$('#com-new').click(function() {
 					localStorage.removeItem('comorder');
 					$('#com-new').addClass('active');
@@ -570,9 +622,19 @@ setInterval(function() {
 					window.location.reload(true);
 					return false;
 				});
-				done = true;
-			}  
-			
+
+			}
+		
+}
+
+function imagechange() {
+
+			// bereits gesehen Markierung
+			if ($('#brille').hasClass('active')) {
+				saveid();
+				//add_seen_marker();
+			}
+	
 			// + bei resized Bildern hinzufügen
 			if (!$('.item-fullsize-link').length) {
 				var imgu = document.getElementsByClassName('item-image')[0]; 
@@ -593,33 +655,68 @@ setInterval(function() {
 			var itemname = '#item-' + itemId.substring(itemId.length - 6, itemId.length);
 			var posi = $(itemname).offset().top - 52;
 			if ($(window).scrollTop() != posi) {
-				//window.scrollTo(0, posi);
+				//window.scrollTo(0, posi); //ohne Animation
 				$('html').stop();
 				$('html').animate({scrollTop: posi}, 300, 'swing', function() { return;});
 			}
-			
-		}else{
-			
+}
+
+function streamchange() {
+		if (!$('.item-container').length) {
 			var stil = document.getElementsByTagName('html')[0];
 			if (stil.style.overflowX != 'hidden' || stil.style.overflowY != 'auto') {
 				stil.style.overflowX = 'hidden';	
 				stil.style.overflowY = 'auto';	
 			}
 		}
-    }, 100);
-
-	
-function check_if_scrolled() {
-	var loadingTargetNewer = 2048 / 2,
-		loadingTargetOlder = $('#main-view').height() - 2048 + 400;
-	var current = $(document).scrollTop();
-	if (current > loadingTargetOlder && current != 0) {
-		return true;
-	}else{
-		return false;
-	}
+		// Bereits gesehen Markierungen in den thumbs
+		if ($('#brille').hasClass('active')) {
+			console.log('streamchange_show_seenids');
+			show_seenids();
+		}
+			
+			// Fadein Effekt für Comments
+			if ($('.stream-row').length) {
+				$('.stream-row a').click(function() {
+					if (!$('.item-comments:first').hasClass('fadeInLeft')) {
+						$('.item-comments:first').addClass('fadeInLeft');
+						$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'}); 
+					}
+				});
+			}
+			
+			// Seite zentrieren links/rechts
+			if ($('div#stream').css('margin-left') == '0px') {
+				var mainwidth = $('#main-view' ).width();
+				var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
+				$('div#stream').css('margin-left', margin);
+			}
+		
 }
-	
+
+function headerchange() {
+			// Bereits gesehen Button
+			if ($('#brille').length) {
+				$('#brille').click(function() {
+					$('#brille').toggleClass("active");
+					var value = $("#brille").hasClass("active")? 'on' : 'off';
+					localStorage.setItem('alreadyseen', value);
+					if ($('#brille').hasClass('active')) {
+						$('.seen').css('display', 'block');
+						$('.seen_marker').css('display', 'block');
+						if ($('.item-container').length) saveid();
+						show_seenids();
+					}else{
+						$('.seen').css('display', 'none');
+						$('.seen_marker').css('display', 'none');
+					}
+					return false;
+				});
+			}
+
+			// Random Button aktualisieren
+			if (document.getElementById('random').getAttribute('href') == '') prepareButton();
+}
 	
 // Space Vergrößerung und links/rechts Bildwechsel
 document.addEventListener("keydown", keydown, false);
@@ -653,7 +750,6 @@ function keydown(event) {
 
 
 // Image Scroll
-
     // Firefox
 document.addEventListener("DOMMouseScroll", handleWheel, false);
 	// IE9, Chrome, Safari, Opera
@@ -812,7 +908,7 @@ var ssb = {
             
             //if (isHover(coms[0])) {
 			if (cont_id == 'item-comments') {
-               this.ratio = this.offsetHeight / ($('.comments').outerHeight(true) + 128);//187+33
+               this.ratio = this.offsetHeight / ($('.comments').outerHeight(true) + 131);//187+33
 			}else{
 				this.ratio = ($(window).height()-52) / ($('.comments').outerHeight(true) + 187 + 53); //#main-view
 				//this.st.style.height =  $('#main-view').height() + 'px';
@@ -877,7 +973,7 @@ var ssb = {
             o.sb.style.width = o.su.style.width = o.su.style.height = o.sd.style.width = o.sd.style.height = o.sw + 'px';
 			o.st.style.width = (o.sw + 6) + 'px';
 			o.st.style.height =  $(window).height() - 51 + 'px'; //'#main-view'
-            o.sb.style.height = Math.ceil(o.ratio * 666) + 'px';
+            o.sb.style.height = Math.ceil(o.ratio * ($(window).height() - 51)) + 'px';
 			o.sb.style.right = '3px';
         }
     },
@@ -922,7 +1018,6 @@ var ssb = {
         ssb.asd.sg = false;
     }
 }
-
 
 		
 })();
