@@ -1,7 +1,7 @@
 pr0gramm.com-by-Seglor 1.5.9.4
 ======================
 
-![bbbbbff](https://cloud.githubusercontent.com/assets/1558446/5594328/c8744afe-9247-11e4-9bbd-3ddb1022f2ea.PNG)
+![prooo](https://cloud.githubusercontent.com/assets/1558446/6135267/7b829338-b167-11e4-905c-c222025c9586.PNG)
 
 Willkommen ihr fags
 
@@ -12,15 +12,14 @@ Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuz
  
 
 
-pr0gramm.user.js -> **Alte Version** (mit Bugs!) dient nur noch dazu, um die UpdateURL auf die neuen Scripte anzupassen!
-
 
 ###Integrierte Veränderungen:
 
+- Eigene Benis Anzeige im Header
 - Erweiterte Kommentaransicht
 - "Bereits gesehen"-Markierung der Uploads, deaktivierbar
 - Custom Scrollbar in den Kommentaren
-- Fullscreenansicht
+- Allgemeine Fullscreenansicht
 - Kommentarleiste links
 - Bilderwechsel mit dem Mausrad
 - Bildgröße an Bildschirm angepasst
