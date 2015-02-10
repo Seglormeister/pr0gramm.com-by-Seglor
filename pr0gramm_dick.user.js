@@ -4,7 +4,8 @@
 // @author	Seglormeister
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
-// @version     1.5.9.4
+// @icon http://pr0gramm.com/media/pr0gramm-favicon.png
+// @version     1.5.9.5
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -353,6 +354,7 @@ if (!window.indexedDB) {
     window.alert("Dein Brauser unterstützt keine Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen. Das pr0gramm mag dich trotzdem.");
 }
 
+
 function saveid() {
 	console.log('saveid');
 	if ($('.item-image').length && window.location.pathname.match('/([0-9]{2,7})')) {
@@ -531,11 +533,11 @@ observeDOM(
 			//console.log(obj.target);
 			switch(value) {
 				case "main-view":
-					console.log('header geladen');
+					//console.log('header geladen');
 					headerchange();
 				break;
 				case "stream":
-					//console.log('neue thumbs geladen');
+					//console.log('stream changed');
 					streamchange();
 				break;
 				case "item-container":
@@ -554,6 +556,37 @@ observeDOM(
 			}
 		});
 		
+		// Thumb Markierungen hinzufügen
+        for (var e = 0; e < elements.length; e++) {
+            for (var i = 0; i < elements[e].addedNodes.length; i++) {
+                if (elements[e].addedNodes[i].className != 'date-label' && elements[e].addedNodes[i].childNodes.length > 0 && elements[e].addedNodes[i].className.indexOf('stream-row') > -1) {
+                    var thumbs = elements[e].addedNodes[i].getElementsByTagName('a');
+                    for (var j = 0; j < thumbs.length; j++) {
+                        if (thumbs[j].id != '') {
+                            thumbs[j].style.position = 'relative';
+                            var lbl = label.cloneNode(false),
+                                item = window.p.currentView.stream.items[thumbs[j].id.substr(5)],
+                                date = new Date(item.created * 1000),
+                                benis = item.up - item.down;
+								if (item.flags == 1) flag = 'flags flags-1', flagname = 'SFW';
+								else if (item.flags == 2) flag = 'flags flags-2', flagname = 'NSFW';
+								else if (item.flags == 4) flag = 'flags flags-4', flagname = 'NSFL';
+								
+                            lbl.textContent = date.getHours() + ':' + date.getMinutes() + ' (' + (benis >= 0 ? '+'+benis : benis) + ')';
+							thumbs[j].insertBefore(lbl, null);
+							var lbl2 = document.createElement('span');
+							lbl2.className = flag;
+							lbl2.textContent = flagname;
+							var style = document.createAttribute("style"); 
+							style.value = 'color: #FFF !important; margin-left: 20px; font-size:11px; padding: 0px 5px;';
+							lbl2.setAttributeNode(style);
+							lbl.appendChild(lbl2);
+                        }
+                    }
+                }
+            }
+        }
+
     },
     true
 );
@@ -637,7 +670,7 @@ function imagechange() {
 	
 			// + bei resized Bildern hinzufügen
 			if (!$('.item-fullsize-link').length) {
-				var imgu = document.getElementsByClassName('item-image')[0]; 
+				var imgu = document.getElementsByClassName('item-image')[0];
 				if (imgu.naturalHeight > 460) {
 					var link = imgu.getAttribute('src');
 					$('.item-image-wrapper').append('<a class="item-fullsize-link" target="_blank" href="'+link+'" style="">+</a>');
@@ -669,6 +702,7 @@ function streamchange() {
 				stil.style.overflowY = 'auto';	
 			}
 		}
+		
 		// Bereits gesehen Markierungen in den thumbs
 		if ($('#brille').hasClass('active')) {
 			console.log('streamchange_show_seenids');
@@ -691,10 +725,18 @@ function streamchange() {
 				var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
 				$('div#stream').css('margin-left', margin);
 			}
-		
+
 }
 
 function headerchange() {
+		if (!$('.item-container').length) {
+			var stil = document.getElementsByTagName('html')[0];
+			if (stil.style.overflowX != 'hidden' || stil.style.overflowY != 'auto') {
+				stil.style.overflowX = 'hidden';	
+				stil.style.overflowY = 'auto';	
+			}
+		}
+
 			// Bereits gesehen Button
 			if ($('#brille').length) {
 				$('#brille').click(function() {
