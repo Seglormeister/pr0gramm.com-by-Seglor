@@ -5,7 +5,7 @@
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
 // @icon http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version     1.5.9.5
+// @version     1.5.9.6
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -249,7 +249,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}'+
 '.commentview { background: url("http://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
 '.commentview:hover { background: url("http://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
-'div.item-comments.wide { width: 40% !important;}'+
+'div.item-comments.wide { width: '+ ($(window).width() * 0.4) +'px !important;}'+
 'div.item-container-content.wide { padding-left: 40% !important;}'+
 'div.item-container-content.wide .item-image-wrapper { max-width: 90% !important;}'+
 'div.item-container-content.wide .item-image { max-width: 100% !important;}'+
@@ -258,7 +258,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'span.vote-fav.wide { left: 130px !important; top: 0px !important;}'+
 '.commentfarbe1 { border-left: 2px solid rgb(51, 52, 150) !important;}'+
 '.commentfarbe2 { border-left: 2px solid rgba(48, 221, 22, 0.72) !important;}'+
-'.commentfarbe3 { border-left: 2px solid rgba(254, 142, 17, 0.64) !important;}'+
+'.commentfarbe3 { border-left: 2px solid rgba(254, 137, 6, 0.85) !important;}'+
 '.commentfarbe4 { border-left: 2px solid rgba(245, 0, 0, 0.77) !important;}'+
 '.commentfarbe5 { border-left: 2px solid rgba(167, 22, 221, 0.72) !important;}'+
 '.opuser .user:before { content: \'OP\'; color: #FFF; padding: 1px 3px; vertical-align: baseline; font-weight: bold; border-radius: 0.25em; background-color: rgb(238, 77, 46); margin-right: 5px; }'+
@@ -291,7 +291,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
 '.item-container-content { padding-left: 23%; display: table-cell; vertical-align: middle;}'+
-'div.item-container { z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
+'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
 '.user-info { margin: 20px 30px 0 0 !important; }'+
@@ -354,9 +354,14 @@ if (!window.indexedDB) {
     window.alert("Dein Brauser unterstützt keine Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen. Das pr0gramm mag dich trotzdem.");
 }
 
+// DB löschen
+//var request = indexedDB.deleteDatabase("UploadsSeen");
+//request.onsuccess = function() { console.log("DB gelöscht"); };
+//request.onerror = function() { console.log("DB NICHT gelöscht"); };
+
 
 function saveid() {
-	console.log('saveid');
+	//console.log('saveid');
 	if ($('.item-image').length && window.location.pathname.match('/([0-9]{2,7})')) {
 		var db;
 		var open = indexedDB.open("UploadsSeen", 1);
@@ -393,7 +398,7 @@ function saveid() {
 }
 
 function show_seenids() {
-	console.log('show_seenids');
+	//console.log('show_seenids');
 	if ($('#stream').length) {
 		var ids = 0;
 		var db;
@@ -410,9 +415,9 @@ function show_seenids() {
 				var first = $('.stream-row a:first').attr('id');
 			}
 			var last = $('#stream .stream-row:last').find('a:last').attr('id');
-			if (!first || !last) {
+			//if (!first || !last) {
 				//return saveid();
-			}
+			//}
 			var range = IDBKeyRange.bound(last.slice(5), first.slice(5));
 			store.openCursor(range, 'prevunique').onsuccess = function(event) {
 				var cursor = event.target.result;
@@ -553,20 +558,34 @@ observeDOM(
 					//console.log('Comments geladen');
 					commentschange();
 				break;
+				case "item-comments wide":
+					//console.log('Comments geladen');
+					commentschange();
+				break;
+				case "item-comments wide fadeInLeft":
+					//console.log('Comments geladen');
+					commentschange();
+				break;
 			}
 		});
-
+		
     },
     true
 );
 
 function commentschange() {
 			// FadeIn Effekt für Kommentarspalte
-			if (!$('.comments').hasClass('loded') && $('.comments').length) {
+			var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+			if (!$('.comments').hasClass('loded') && $('.comments').length && !is_chrome) {
 					$('.comments-head').fadeIn(300);
 				    $('.comment-form').fadeIn(300);
 				    $('.comments').fadeIn(300);
 					$('.comments').addClass('loded');
+			}
+			if (is_chrome) {
+				$('.comments-head').css('display', 'block');
+				$('.comment-form').css('display', 'block');
+				$('.comments').css('display', 'block');
 			}
 			
 		   // Scrollbar laden in den Comments
@@ -576,9 +595,11 @@ function commentschange() {
 				 $('.item-comments').addClass('scroll');
 				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
 				 $('.item-comments:first').css('overflow', 'hidden');
-				 //if ($('.item-comments:first').hasClass('fadeInLeft')) {
-					//$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
-				 //}
+				 //nur in chrome
+				 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+				 if ($('.item-comments:first').hasClass('fadeInLeft') && is_chrome) {
+					$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+				 }
 			  }
 		   }
 		
@@ -590,6 +611,22 @@ function commentschange() {
 						$(this).toggleClass("wide");
 					});
 					
+					//Scrollbalken anpassen
+					if (!$('.item-comments').hasClass('scroll')) {
+						if ($('.comments').height() > ($('.item-comments').height()-130)) {
+							ssb.scrollbar('item-comments');
+							$('.item-comments').addClass('scroll');
+							$('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
+							$('.item-comments:first').css('overflow', 'hidden');
+							 //nur in chrome
+							 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+							 if ($('.item-comments:first').hasClass('fadeInLeft') && is_chrome) {
+								$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+							 }
+						}
+					}else{
+						ssb.refresh();
+					}
 					$("span.vote-fav").toggleClass("wide");
 					var value = $("div.item-container-content").hasClass("wide") ? 'wide' : 'normal';
 					localStorage.setItem('commentview', value);
@@ -674,7 +711,7 @@ function streamchange() {
 		
 		// Bereits gesehen Markierungen in den thumbs
 		if ($('#brille').hasClass('active')) {
-			console.log('streamchange_show_seenids');
+			//console.log('streamchange_show_seenids');
 			show_seenids();
 		}
 			
@@ -694,7 +731,7 @@ function streamchange() {
 				var margin = (mainwidth-(Math.floor(mainwidth/132)*132))/2-15 + 'px';
 				$('div#stream').css('margin-left', margin);
 			}
-
+		
 }
 
 function headerchange() {
@@ -815,15 +852,13 @@ if (!e) return false;
 
 // Code für den Random Button     
     function prepareButton() {
-		var lastId = localStorage.getItem('pr0latestId');
-		if (!lastId) {
 			if ($('.stream-row a:first').length) {
-				lastId = parseInt($('.stream-row a:first').attr('id'));
+				var str = $('.stream-row a:first').attr('id');
+				lastId = str.slice(5, str.length);
 			}else{
-				lastId = 137544;
+				lastId = 620000;
 			}
 			localStorage.setItem('pr0latestId', lastId);
-		}
 		var imageId = Math.floor((Math.random() * lastId) + 1);
 		dingsda = document.getElementById('random');
 		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
