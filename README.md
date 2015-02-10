@@ -1,4 +1,4 @@
-pr0gramm.com-by-Seglor 1.5.9.5
+pr0gramm.com-by-Seglor 1.5.9.6
 ======================
 
 ![prooo](https://cloud.githubusercontent.com/assets/1558446/6135267/7b829338-b167-11e4-905c-c222025c9586.PNG)
@@ -45,5 +45,5 @@ Raw Link: https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0
 
 
 
-Huldigt dem pr0gramm.
+Das pr0gramm mag userscripts.
     
