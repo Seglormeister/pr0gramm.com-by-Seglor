@@ -1,11 +1,11 @@
-pr0gramm.com-by-Seglor 1.5.9.4
+pr0gramm.com-by-Seglor 1.5.9.5
 ======================
 
 ![prooo](https://cloud.githubusercontent.com/assets/1558446/6135267/7b829338-b167-11e4-905c-c222025c9586.PNG)
 
 Willkommen ihr fags
 
-Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten.
+Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuzufügen. Genaue Auflistung folgt unten. Getestet unter Firefox und Chrome.
 
 
 > [pr0gramm_dick.user.js](https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js) **->** Breitbild/old pr0gramm
