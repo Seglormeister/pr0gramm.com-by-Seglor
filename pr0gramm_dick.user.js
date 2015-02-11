@@ -5,7 +5,7 @@
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
 // @icon http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version     1.5.9.8
+// @version     1.5.9.9
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -290,7 +290,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
-'.item-container-content { padding-left: 23%; display: table-cell; vertical-align: middle;}'+
+'.item-container-content { overflow: visible !important; padding-left: 23%; display: table-cell; vertical-align: middle;}'+
 'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
