@@ -5,7 +5,7 @@
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
 // @icon http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version     1.5.9.7
+// @version     1.5.9.8
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -535,7 +535,8 @@ observeDOM(
 		$.each(elements, function(idx, obj) {
 			var test = jQuery(obj.target);
 			var value = test[0].id || test[0].className;
-			//console.log(value);
+			//console.log(test);
+			if (value.length > 12 && value.match('(item-comments)')) value = 'item-comments';
 			switch(value) {
 				case "main-view":
 					//console.log('header geladen');
@@ -552,27 +553,6 @@ observeDOM(
 				break;
 				case "item-comments":
 					//console.log('Comments geladen');
-					commentschange();
-				break;
-				case "item-comments fadeInLeft":
-					//console.log('Comments geladen');
-					commentschange();
-				break;
-				case "item-comments wide":
-					//console.log('Comments geladen');
-					commentschange();
-				break;
-				case "item-comments wide fadeInLeft":
-					//console.log('Comments geladen');
-					commentschange();
-				break;
-				case "item-comments second scroll":
-					commentschange();
-				break;
-				case "item-comments wide second scroll":
-					commentschange();
-				break;
-				case "item-comments second scroll wide":
 					commentschange();
 				break;
 			}
@@ -615,33 +595,37 @@ function commentschange() {
 		
 			// Kommentaransicht ändern
 			if ($('.item-comments').length) {
-				$('span.commentview').click(function() {
-					$("div.item-container-content").toggleClass("wide");
-					$("div.item-comments").each(function(index) {
-						$(this).toggleClass("wide");
-					});
-					
-					//Scrollbalken anpassen
-					if (!$('.item-comments').hasClass('scroll')) {
-						if ($('.comments').height() > ($('.item-comments').height()-130)) {
-							ssb.scrollbar('item-comments');
-							$('.item-comments').addClass('scroll');
-							$('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
-							$('.item-comments:first').css('overflow', 'hidden');
-							 //nur in chrome
-							 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-							 if (is_chrome) {
-								$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
-							 }
+				// nur einmalig einbinden
+				var event = $._data( $('.commentview')[0], 'events' );
+				if (!event) {
+					$('span.commentview').click(function() {
+						$("div.item-container-content").toggleClass("wide");
+						$("div.item-comments").each(function(index) {
+							$(this).toggleClass("wide");
+						});
+				
+						//Scrollbalken anpassen
+						if (!$('.item-comments').hasClass('scroll')) {
+							if ($('.comments').height() > ($('.item-comments').height()-130)) {
+								ssb.scrollbar('item-comments');
+								$('.item-comments').addClass('scroll');
+								$('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
+								$('.item-comments:first').css('overflow', 'hidden');
+								 //nur in chrome
+								 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+								 if (is_chrome) {
+									$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+								 }
+							}
+						}else{
+							ssb.refresh();
 						}
-					}else{
-						ssb.refresh();
-					}
-					$("span.vote-fav").toggleClass("wide");
-					var value = $("div.item-container-content").hasClass("wide") ? 'wide' : 'normal';
-					localStorage.setItem('commentview', value);
-					return false;
-				});
+						$("span.vote-fav").toggleClass("wide");
+						var value = $("div.item-container-content").hasClass("wide") ? 'wide' : 'normal';
+						localStorage.setItem('commentview', value);
+						return false;
+					});
+				}
 			}
 		
 			// Kommentarsortierung laden
@@ -753,8 +737,10 @@ function headerchange() {
 			}
 		}
 
-			// Bereits gesehen Button
-			if ($('#brille').length) {
+			// Bereits gesehen Button, nur einmal einbinden
+				var event = $._data( $('#brille')[0], 'events' );
+			if ($('#brille').length && !event) {
+			
 				$('#brille').click(function() {
 					$('#brille').toggleClass("active");
 					var value = $("#brille").hasClass("active")? 'on' : 'off';
