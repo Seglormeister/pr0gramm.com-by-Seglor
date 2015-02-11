@@ -5,7 +5,7 @@
 // @description Verbessert das pr0gramm mit einigen Erweiterungen
 // @include     http://pr0gramm.com/*
 // @icon http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version     1.5.9.6
+// @version     1.5.9.7
 // @grant       none
 // @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -239,7 +239,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.stream-next, .stream-prev { padding: 200px 0 0 !important; margin: 200px 0px 0px !important; position: fixed !important; color: rgba(245, 247, 246, 0.29) !important; font-size: 38px !important; }'+
 '.stream-next:hover, .stream-prev:hover { color: rgba(238, 77, 46, 1.0) !important; }'+
 '.stream-prev { left: 24% !important;}'+
-'.item-comments { position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
+'.item-comments { -webkit-transform: translateZ(0); position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
 '.item-comments textarea.comment { resize: none; box-shadow: 0 0 0 2px rgba(72, 72, 72, 0.36);}'+
 'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}'+		
 
@@ -535,7 +535,7 @@ observeDOM(
 		$.each(elements, function(idx, obj) {
 			var test = jQuery(obj.target);
 			var value = test[0].id || test[0].className;
-			//console.log(obj.target);
+			//console.log(value);
 			switch(value) {
 				case "main-view":
 					//console.log('header geladen');
@@ -566,9 +566,19 @@ observeDOM(
 					//console.log('Comments geladen');
 					commentschange();
 				break;
+				case "item-comments second scroll":
+					commentschange();
+				break;
+				case "item-comments wide second scroll":
+					commentschange();
+				break;
+				case "item-comments second scroll wide":
+					commentschange();
+				break;
 			}
 		});
 		
+
     },
     true
 );
@@ -597,8 +607,8 @@ function commentschange() {
 				 $('.item-comments:first').css('overflow', 'hidden');
 				 //nur in chrome
 				 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-				 if ($('.item-comments:first').hasClass('fadeInLeft') && is_chrome) {
-					$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+				 if (is_chrome) {
+					$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
 				 }
 			  }
 		   }
@@ -620,8 +630,8 @@ function commentschange() {
 							$('.item-comments:first').css('overflow', 'hidden');
 							 //nur in chrome
 							 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-							 if ($('.item-comments:first').hasClass('fadeInLeft') && is_chrome) {
-								$('.item-comments:not(.fadeInLeft)').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+							 if (is_chrome) {
+								$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
 							 }
 						}
 					}else{
@@ -890,7 +900,7 @@ var ssb = {
         cont_clone.appendChild(cont);
 		
         cont.className = cont.className.replace("fadeInLeft", "");
-		
+		cont.className += ' second';
         // adding new container into array
         ssb.aConts[ssb.N++] = cont;
 
