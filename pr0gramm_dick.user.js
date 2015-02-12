@@ -5,7 +5,7 @@
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
 // @include		http://pr0gramm.com/*
 // @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.0
+// @version		1.6.0.1
 // @grant		none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -276,7 +276,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
 'div.comment { border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
-'.vote-fav { left: 230px !important; top: 20px !important;}'+
+'.vote-fav { left: 230px !important; top: 30px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
 '.side-wide-skyscraper { display:none;}'+
 'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
@@ -312,7 +312,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
 'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
 //'.item-container-content img { max-height: calc(100% - 200px);}'+//'+highitemimage+'px
-'.item-image { max-height: calc(100vh - 200px); max-width: calc(100vw - 600px) !important;}'+//'+highitemimage+'px '+widthitemimage+'px
+'.item-image { max-height: calc(100vh - 200px);}'+//max-width: calc(100vw - 600px) !important; 		'+highitemimage+'px '+widthitemimage+'px
 'video.item-image { width: auto;}'+
 'div.video-position-bar { max-width: calc(100vw - 600px) !important;}'+//'+widthitemimage+'px
 'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
@@ -567,7 +567,6 @@ observeDOM(
 			}
 		});
 		
-
 
     },
     true
@@ -840,6 +839,11 @@ function keydown(event) {
 
 			if (!spacepressed) {
 				$(".item-image").css({ 'max-height': '100%', 'cursor': 'move', 'position': 'relative'});
+				if ($('.item-fullsize-link').length) {
+					var full = $('.item-fullsize-link').attr('href');
+					$('.item-fullsize-link').attr('href', $('.item-image').attr('src'));
+					$('.item-image').attr('src', full);
+				}
 				spacepressed = true;
 				var events = $._data($('.item-image')[0], 'events');
 				clickevent = events.click[0].handler;
@@ -853,7 +857,11 @@ function keydown(event) {
 			}else{
 				$(".item-image").unbind("mousedown");
 				$(".item-image").bind("click", clickevent);
-				$(".item-image").css({ 'left': '0px', 'top': '0px', 'max-height': '562px', 'cursor': 'pointer'});
+				$(".item-image").css({ 'left': '0px', 'top': '0px', 'max-height': 'calc(100vh - 200px)', 'cursor': 'pointer'});
+				var full = $('.item-fullsize-link').attr('href');
+				$('.item-fullsize-link').attr('href', $('.item-image').attr('src'));
+				$('.item-image').attr('src', full);
+				
 				spacepressed = false;
 			}
 		}
