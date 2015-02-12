@@ -1,4 +1,4 @@
-pr0gramm.com-by-Seglor 1.5.9.9
+pr0gramm.com-by-Seglor 1.6.0.0
 ======================
 
 ![prooo](https://cloud.githubusercontent.com/assets/1558446/6137566/4ce717fc-b17a-11e4-8c1e-65a1939e03f6.PNG)
@@ -15,18 +15,20 @@ Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuz
 
 ###Integrierte Veränderungen:
 
-- Eigene Benis Anzeige im Header
-- Erweiterte Kommentaransicht
-- "Bereits gesehen"-Markierung der Uploads, deaktivierbar
-- Custom Scrollbar in den Kommentaren
 - Allgemeine Fullscreenansicht
 - Kommentarleiste links
 - Bilderwechsel mit dem Mausrad
+- Eigene Benis Anzeige im Header
+- Erweiterte Kommentaransicht
+- "Bereits gesehen"-Markierung der Uploads (deaktivierbar)
+- Custom Scrollbar in den Kommentaren
 - Bildgröße an Bildschirm angepasst
 - Kommentare nach Zeit/Beliebtheit sortieren
 - Random Upload Button
-- OP Kennzeichnung in Kommentaren (Neu!)
-- Bessere Lesbarkeit der Kommentare durch Farben (Neu!)
+- OP Kennzeichnung in Kommentaren (NEU!)
+- Bessere Lesbarkeit der Kommentare durch Farben (NEU!)
+- Bildzoom mit der Leertaste (per Drag and Drop verschieben) (NEU!)
+- Filteranzeige unter jedem Bild (NEU!)
 
 
 
