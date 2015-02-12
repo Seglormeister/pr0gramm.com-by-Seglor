@@ -5,7 +5,7 @@
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
 // @include		http://pr0gramm.com/*
 // @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.1
+// @version		1.6.0.2
 // @grant		none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -151,7 +151,7 @@ p.opClass = function(currentOp, currentUser) {
 };
 
 // Comments Template	
-p.View.Stream.Comments.prototype.template = '<div class="comments-head" style="display:none"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form style="display:none" class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div style="display:none" class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}{p.opClass(itemOp,c.name)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
+p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}{p.opClass(itemOp,c.name)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
  
 p.View.Stream.Comments.SortTime = function(a, b) {
     return (b.created - a.created);
@@ -308,7 +308,10 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.user-info { margin: 20px 30px 0 0 !important; }'+
 '#pr0gramm-logo { margin-left: 15px !important; }'+
 '.item-pointer { display: none !important; }'+
-'span.flags {margin-left: 120px; float: none !important; color: #FFF !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}'+
+'span.flags {margin-left: 120px; float: none !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}'+
+'span.flags-1 { color: #A7D713 !important; background-color: transparent !important;}'+
+'span.flags-2 { color: #F6AB09 !important; background-color: transparent !important;}'+
+'span.flags-4 { color: #E41B1B !important; background-color: transparent !important;}'+
 'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
 'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
 //'.item-container-content img { max-height: calc(100% - 200px);}'+//'+highitemimage+'px
@@ -338,22 +341,14 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 
 // CSS Style hinzufügen
-    if (typeof GM_addStyle != "undefined") {
-        GM_addStyle(css);
-    } else if (typeof PRO_addStyle != "undefined") {
-        PRO_addStyle(css);
-    } else if (typeof addStyle != "undefined") {
-        addStyle(css);
+    var node = document.createElement("style");
+    node.type = "text/css";
+    node.appendChild(document.createTextNode(css));
+    var heads = document.getElementsByTagName("head");
+    if (heads.length > 0) {
+        heads[0].appendChild(node); 
     } else {
-        var node = document.createElement("style");
-        node.type = "text/css";
-        node.appendChild(document.createTextNode(css));
-        var heads = document.getElementsByTagName("head");
-        if (heads.length > 0) {
-            heads[0].appendChild(node); 
-        } else {
-            document.documentElement.appendChild(node);
-        }
+        document.documentElement.appendChild(node);
     }
 	
   
@@ -467,6 +462,7 @@ function add_seen_marker() {
 	}
 }
 
+// Benis Anzeige
 var inbox = document.getElementById('inboxLink'),
     b = document.createElement('span'),
     getCookie = function(name) {
@@ -503,6 +499,17 @@ var inbox = document.getElementById('inboxLink'),
         });
     };
 
+label = document.createElement('div');
+b.style.cssText = 'background-image: url("http://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
+var attr = document.createAttribute("title"); 
+attr.value = 'Dein Benis';
+b.setAttributeNode(attr);
+label.className = 'date-label';
+label.style.cssText = 'position: absolute; left: 0px; right: 0px; bottom: 0px; text-align: center; font-size: 10px; color: #FFFFFF !important; text-shadow: 1px 1px 0px black, 1px -1px 0px black, -1px 1px 0px black, -1px -1px 0px black; background-color: rgba(0,0,0,.5);';
+inbox.parentNode.insertBefore(b, inbox);
+update();
+setInterval(update, 40000);
+	
 // Observer für Seitenänderung
     observeDOM = (function(){
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
@@ -527,17 +534,7 @@ var inbox = document.getElementById('inboxLink'),
         }
     })();
 
-label = document.createElement('div');
-b.style.cssText = 'background-image: url("http://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
-var attr = document.createAttribute("title"); 
-attr.value = 'Dein Benis';
-b.setAttributeNode(attr);
-label.className = 'date-label';
-label.style.cssText = 'position: absolute; left: 0px; right: 0px; bottom: 0px; text-align: center; font-size: 10px; color: #FFFFFF !important; text-shadow: 1px 1px 0px black, 1px -1px 0px black, -1px 1px 0px black, -1px -1px 0px black; background-color: rgba(0,0,0,.5);';
-inbox.parentNode.insertBefore(b, inbox);
-update();
-setInterval(update, 40000);
-
+	
 observeDOM(
     document.getElementById('page'),
     function(elements){
@@ -573,15 +570,15 @@ observeDOM(
 );
 
 function commentschange() {
-			// FadeIn Effekt für Kommentarspalte
-			if ($('.comments').length) {
+			// Kommentare einblenden
+			/*if ($('.comments').length) {
 					$('.comments-head').css('display', 'block');
 					$('.comment-form').css('display', 'block');
 					$('.comments').css('display', 'block');
-					/*$('.comments-head').fadeIn(300);
-				    $('.comment-form').fadeIn(300);
-				    $('.comments').fadeIn(300);*/
-			}
+					//$('.comments-head').fadeIn(300);
+				    //$('.comment-form').fadeIn(300);
+				    //$('.comments').fadeIn(300);
+			}*/
 			
 		   // Custom Scrollbar laden in den Comments, nicht bei Chrome
 		   if (!is_chrome && $('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
@@ -671,10 +668,10 @@ function commentschange() {
 
 function imagechange() {
 
-	$('.item-image-wrapper').click(function() {
+	$('.item-image-wrapper').click(function(e) {
+		if(e.target != this) return;
 		$('.item-image:visible').click();
 	});
-
 			// bereits gesehen Markierung
 			if ($('#brille').hasClass('active')) {
 				saveid();
@@ -778,7 +775,8 @@ function headerchange() {
 // Space Vergrößerung und links/rechts Bildwechsel
 document.addEventListener("keydown", keydown, false);
 
-	function startDrag(e) {
+// Bild Zoom Maussteuerung
+function startDrag(e) {
             // determine event object
             if (!e) {
                 var e = window.event;
@@ -807,9 +805,9 @@ document.addEventListener("keydown", keydown, false);
             document.onmousemove = dragDiv;
             return false;
 
-        }
+}
         
-		function dragDiv(e) {
+function dragDiv(e) {
             if (!drag) {return};
             if (!e) { var e= window.event};
             // var targ=e.target?e.target:e.srcElement;
@@ -817,11 +815,12 @@ document.addEventListener("keydown", keydown, false);
             targ.style.left=coordX+e.clientX-offsetX+'px';
             targ.style.top=coordY+e.clientY-offsetY+'px';
             return false;
-        }
+}
         
-		function stopDrag() {
-            drag=false;
-        }
+function stopDrag() {
+    drag=false;
+}
+		
 var clickevent;
 function keydown(event) {
 	if (event.keyCode == '32') {
@@ -921,9 +920,8 @@ if (!e) return false;
     return (e.parentElement.querySelector(':hover') === e);
 }
 
-
 // Code für den Random Button     
-    function prepareButton() {
+function prepareButton() {
 			if ($('.stream-row a:first').length) {
 				var str = $('.stream-row a:first').attr('id');
 				lastId = str.slice(5, str.length);
@@ -934,7 +932,7 @@ if (!e) return false;
 		var imageId = Math.floor((Math.random() * lastId) + 1);
 		dingsda = document.getElementById('random');
 		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
-    }
+}
 
     
 // Custom Scrollbar
