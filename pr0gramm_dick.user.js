@@ -1,20 +1,21 @@
 // ==UserScript==
-// @name        pr0gramm.com Dick by Seglor
-// @namespace   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
-// @author	Seglormeister
-// @description Verbessert das pr0gramm mit einigen Erweiterungen
-// @include     http://pr0gramm.com/*
-// @icon http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version     1.5.9.9
-// @grant       none
-// @require	http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
-// @updateURL   https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
+// @name		pr0gramm.com Dick by Seglor
+// @namespace	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
+// @author		Seglormeister
+// @description	Verbessert das pr0gramm mit einigen Erweiterungen
+// @include		http://pr0gramm.com/*
+// @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
+// @version		1.6.0.0
+// @grant		none
+// @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
 (function() {
 //¯\_(ツ)_/¯ 
 
-
+function waitForPage(){
+    if(typeof p !== "undefined"){
 // Verhindert Gewackel beim Scrollen
 p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
         if ($item.is(this.$currentItem)) {
@@ -141,7 +142,7 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
 }
 
 
-p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span> <?js } ?> </div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
+p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
     
 p.opClass = function(currentOp, currentUser) {
 	if(!currentOp || !currentUser)
@@ -201,15 +202,24 @@ p.View.Stream.Comments.prototype.showReplyForm = function(ev) {
         return false;
 }
 
+    }else{
+		console.log('p undefined');
+        setInterval(function(){
+            waitForPage();
+        },250);
+    }
+}
+waitForPage();
 
 var spacepressed = false;
 var wheelLast = 0;
-
+var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+/*
 		var high = $(window).height()-51;
 		var highitemimage = $(window).height()-200;
 		var highcontainer = $(window).height()-52;
 		var widthitemimage = $(window).width()-600;
-
+*/
 // Random Button und Bereits gesehen Button einfügen
 var valueseen = localStorage.getItem('alreadyseen')=='on'? 'active': '';
 $('#head-menu').append('<a class="link '+valueseen+'" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
@@ -249,7 +259,8 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}'+
 '.commentview { background: url("http://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
 '.commentview:hover { background: url("http://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
-'div.item-comments.wide { width: '+ ($(window).width() * 0.4) +'px !important;}'+
+'div.item-comments.wide { width: 40% !important;}'+//($(window).width() * 0.4)
+'div.item-comments .second .wide { width: 100% !important;}'+
 'div.item-container-content.wide { padding-left: 40% !important;}'+
 'div.item-container-content.wide .item-image-wrapper { max-width: 90% !important;}'+
 'div.item-container-content.wide .item-image { max-width: 100% !important;}'+
@@ -289,9 +300,9 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'body.two-sidebars div#head, body.two-sidebars div#page { padding: 0 !important;}'+
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
-'.item-comments { border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important; height: '+high+'px !important;}' +
+'.item-comments { height: calc(100vh - 51px) !important; border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important;}' +//'+high+'
 '.item-container-content { overflow: visible !important; padding-left: 23%; display: table-cell; vertical-align: middle;}'+
-'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: '+highcontainer+'px !important; width: 100% !important; }'+
+'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: calc(100% - 52px) !important; width: 100% !important; }'+//'+highcontainer+'px
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
 '.user-info { margin: 20px 30px 0 0 !important; }'+
@@ -300,10 +311,10 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'span.flags {margin-left: 120px; float: none !important; color: #FFF !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}'+
 'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
 'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
-'.item-container-content img { max-height: '+highitemimage+'px;}'+
-'.item-image { max-height: '+highitemimage+'px; max-width: '+widthitemimage+'px !important;}'+
+//'.item-container-content img { max-height: calc(100% - 200px);}'+//'+highitemimage+'px
+'.item-image { max-height: calc(100vh - 200px); max-width: calc(100vw - 600px) !important;}'+//'+highitemimage+'px '+widthitemimage+'px
 'video.item-image { width: auto;}'+
-'div.video-position-bar { max-width: '+widthitemimage+'px !important;}'+
+'div.video-position-bar { max-width: calc(100vw - 600px) !important;}'+//'+widthitemimage+'px
 'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
 '#head-menu { left: 200px; position: absolute;}'+
 'div.in-pane { margin-left: -5px}'+
@@ -313,7 +324,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#footer-links a { color: rgb(238, 77, 46);}'+
 '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
 '#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
-'.item-image-wrapper { max-width: '+widthitemimage+'px; margin: 0px auto;}'+
+'.item-image-wrapper { margin: 0px auto;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
 'div.item-vote { left: 80px;}'+
 '::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
 '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
@@ -324,7 +335,8 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.ssb_sb_over {background: #777;}'+
 '.ssb_st {background: #2A2E31; height:100%; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);cursor:pointer;position:absolute;right:0;top:0;}'+
 '.ssb_up {display:none;cursor:pointer;position:absolute;right:0;top:0;}';
-	
+
+
 // CSS Style hinzufügen
     if (typeof GM_addStyle != "undefined") {
         GM_addStyle(css);
@@ -353,11 +365,6 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 if (!window.indexedDB) {
     window.alert("Dein Brauser unterstützt keine Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen. Das pr0gramm mag dich trotzdem.");
 }
-
-// DB löschen
-//var request = indexedDB.deleteDatabase("UploadsSeen");
-//request.onsuccess = function() { console.log("DB gelöscht"); };
-//request.onerror = function() { console.log("DB NICHT gelöscht"); };
 
 
 function saveid() {
@@ -488,7 +495,9 @@ var inbox = document.getElementById('inboxLink'),
         request.send();
     },
     update = function() {
-        var me = JSON.parse(unescape(getCookie('me')));
+		var cock = unescape(getCookie('me'));
+		if (cock == "undefined") return;
+        var me = JSON.parse(cock);
         get('http://pr0gramm.com/api/user/info?self=true&flags=7&name=' + escape(me.n), function(data){
             b.innerHTML = data.user.score;
         });
@@ -559,34 +568,29 @@ observeDOM(
 		});
 		
 
+
     },
     true
 );
 
 function commentschange() {
 			// FadeIn Effekt für Kommentarspalte
-			var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-			if (!$('.comments').hasClass('loded') && $('.comments').length && !is_chrome) {
-					$('.comments-head').fadeIn(300);
+			if ($('.comments').length) {
+					$('.comments-head').css('display', 'block');
+					$('.comment-form').css('display', 'block');
+					$('.comments').css('display', 'block');
+					/*$('.comments-head').fadeIn(300);
 				    $('.comment-form').fadeIn(300);
-				    $('.comments').fadeIn(300);
-					$('.comments').addClass('loded');
-			}
-			if (is_chrome) {
-				$('.comments-head').css('display', 'block');
-				$('.comment-form').css('display', 'block');
-				$('.comments').css('display', 'block');
+				    $('.comments').fadeIn(300);*/
 			}
 			
-		   // Scrollbar laden in den Comments
-		   if ($('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
+		   // Custom Scrollbar laden in den Comments, nicht bei Chrome
+		   if (!is_chrome && $('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
 			  if ($('.comments').height() > ($('.item-comments').height()-130)) {
 				 ssb.scrollbar('item-comments');
 				 $('.item-comments').addClass('scroll');
 				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
 				 $('.item-comments:first').css('overflow', 'hidden');
-				 //nur in chrome
-				 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 				 if (is_chrome) {
 					$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
 				 }
@@ -605,20 +609,20 @@ function commentschange() {
 						});
 				
 						//Scrollbalken anpassen
-						if (!$('.item-comments').hasClass('scroll')) {
-							if ($('.comments').height() > ($('.item-comments').height()-130)) {
-								ssb.scrollbar('item-comments');
-								$('.item-comments').addClass('scroll');
-								$('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
-								$('.item-comments:first').css('overflow', 'hidden');
-								 //nur in chrome
-								 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-								 if (is_chrome) {
-									$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
-								 }
+						if (!is_chrome) {
+							if (!$('.item-comments').hasClass('scroll')) {
+								if ($('.comments').height() > ($('.item-comments').height()-130)) {
+									ssb.scrollbar('item-comments');
+									$('.item-comments').addClass('scroll');
+									$('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
+									$('.item-comments:first').css('overflow', 'hidden');
+									 if (is_chrome) {
+										$('.item-comments .second').attr('style', function(i,s) { return 'top: 0px !important;' + s });
+									 }
+								}
+							}else{
+								ssb.refresh();
 							}
-						}else{
-							ssb.refresh();
 						}
 						$("span.vote-fav").toggleClass("wide");
 						var value = $("div.item-container-content").hasClass("wide") ? 'wide' : 'normal';
@@ -637,7 +641,7 @@ function commentschange() {
 				}
 			}
 			
-			// Click Events für Sortierung einmalig einbinden
+			// Click Events für Sortierung
 			if ($('#com-new').length) {
 				$('#com-new').click(function() {
 					localStorage.removeItem('comorder');
@@ -657,10 +661,20 @@ function commentschange() {
 				});
 
 			}
-		
+	
+			// Zu Kommentar springen
+			var commentid = window.location.pathname.split(':comment')[1];
+			if (commentid) {
+				var top = document.getElementById('comment' + commentid).offsetTop - 20;
+				$('.item-comments').scrollTop(top);
+			}
 }
 
 function imagechange() {
+
+	$('.item-image-wrapper').click(function() {
+		$('.item-image:visible').click();
+	});
 
 			// bereits gesehen Markierung
 			if ($('#brille').hasClass('active')) {
@@ -709,7 +723,7 @@ function streamchange() {
 			show_seenids();
 		}
 			
-			// Fadein Effekt für Comments
+			// SlideIn Effekt für Comments
 			if ($('.stream-row').length) {
 				$('.stream-row a').click(function() {
 					if (!$('.item-comments:first').hasClass('fadeInLeft')) {
@@ -764,7 +778,52 @@ function headerchange() {
 	
 // Space Vergrößerung und links/rechts Bildwechsel
 document.addEventListener("keydown", keydown, false);
-	
+
+	function startDrag(e) {
+            // determine event object
+            if (!e) {
+                var e = window.event;
+            }
+            if(e.preventDefault) e.preventDefault();
+
+            // IE uses srcElement, others use target
+            targ = e.target ? e.target : e.srcElement;
+
+            //if (targ.className != 'dragme') {return};
+            // calculate event X, Y coordinates
+                offsetX = e.clientX;
+                offsetY = e.clientY;
+
+            // assign default values for top and left properties
+            if(!targ.style.left) { targ.style.left='0px'};
+            if (!targ.style.top) { targ.style.top='0px'};
+
+            // calculate integer values for top and left 
+            // properties
+            coordX = parseInt(targ.style.left);
+            coordY = parseInt(targ.style.top);
+            drag = true;
+
+            // move div element
+            document.onmousemove = dragDiv;
+            return false;
+
+        }
+        
+		function dragDiv(e) {
+            if (!drag) {return};
+            if (!e) { var e= window.event};
+            // var targ=e.target?e.target:e.srcElement;
+            // move div element
+            targ.style.left=coordX+e.clientX-offsetX+'px';
+            targ.style.top=coordY+e.clientY-offsetY+'px';
+            return false;
+        }
+        
+		function stopDrag() {
+            drag=false;
+        }
+var clickevent;
 function keydown(event) {
 	if (event.keyCode == '32') {
 		
@@ -775,17 +834,26 @@ function keydown(event) {
 		}
 		
 		// Bild mit Space vergrößern
-		if ($('.item-image').length != 0) {
+		if ($('.item-image').length) {
 			event.preventDefault();
 			event.stopPropagation();
-		
-			if (!spacepressed && $("div.item-container").length) {
-				$(".item-image").css( 'max-height', '100%' );
-                $(".item-image").css( 'cursor', 'move' );
+
+			if (!spacepressed) {
+				$(".item-image").css({ 'max-height': '100%', 'cursor': 'move', 'position': 'relative'});
 				spacepressed = true;
+				var events = $._data($('.item-image')[0], 'events');
+				clickevent = events.click[0].handler;
+				$(".item-image").mousedown(function(e){
+					$(".item-image").unbind("click");
+					startDrag(e);
+				});
+				$(".item-image").mouseup(function(e){
+					stopDrag(e);
+				});
 			}else{
-				$(".item-image").css( 'max-height', '562px' );
-                $(".item-image").css( 'cursor', 'pointer' );
+				$(".item-image").unbind("mousedown");
+				$(".item-image").bind("click", clickevent);
+				$(".item-image").css({ 'left': '0px', 'top': '0px', 'max-height': '562px', 'cursor': 'pointer'});
 				spacepressed = false;
 			}
 		}
@@ -1059,6 +1127,7 @@ var ssb = {
         ssb.clear();
         ssb.asd.sg = false;
     }
+
 }
 
 		
