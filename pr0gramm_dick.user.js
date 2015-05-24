@@ -3,9 +3,9 @@
 // @namespace	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
 // @author		Seglormeister
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
-// @include		http://pr0gramm.com/*
+// @include		/^https?://pr0gramm.com/.*$/
 // @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.2
+// @version		1.6.0.3
 // @grant		none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
