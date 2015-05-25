@@ -3,9 +3,9 @@
 // @namespace	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
 // @author		Seglormeister
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
-// @include		http://pr0gramm.com/*
+// @include		/^https?://pr0gramm.com/.*$/
 // @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.2
+// @version		1.6.0.4
 // @grant		none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -257,8 +257,8 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; -webkit-transform: translateX(-400px);} 100% { opacity: 1; -webkit-transform: translateX(0); } }'+
 '@keyframes fadeInLeft { 0% { opacity: 1; transform: translateX(-400px);} 100% { opacity: 1; transform: translateX(0); } }'+
 '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}'+
-'.commentview { background: url("http://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
-'.commentview:hover { background: url("http://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
+'.commentview { background: url("https://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
+'.commentview:hover { background: url("https://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
 'div.item-comments.wide { width: 40% !important;}'+//($(window).width() * 0.4)
 'div.item-comments .second .wide { width: 100% !important;}'+
 'div.item-container-content.wide { padding-left: 40% !important;}'+
@@ -494,13 +494,13 @@ var inbox = document.getElementById('inboxLink'),
 		var cock = unescape(getCookie('me'));
 		if (cock == "undefined") return;
         var me = JSON.parse(cock);
-        get('http://pr0gramm.com/api/user/info?self=true&flags=7&name=' + escape(me.n), function(data){
+        get('https://pr0gramm.com/api/user/info?self=true&flags=7&name=' + escape(me.n), function(data){
             b.innerHTML = data.user.score;
         });
     };
 
 label = document.createElement('div');
-b.style.cssText = 'background-image: url("http://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
+b.style.cssText = 'background-image: url("https://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
 var attr = document.createAttribute("title"); 
 attr.value = 'Dein Benis';
 b.setAttributeNode(attr);
@@ -931,7 +931,7 @@ function prepareButton() {
 			localStorage.setItem('pr0latestId', lastId);
 		var imageId = Math.floor((Math.random() * lastId) + 1);
 		dingsda = document.getElementById('random');
-		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
+		dingsda.setAttribute('href', 'https://pr0gramm.com/new/' + imageId);
 }
 
     
