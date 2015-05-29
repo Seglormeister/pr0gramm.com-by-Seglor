@@ -3,9 +3,9 @@
 // @namespace	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor
 // @author		Seglormeister
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
-// @include		http://pr0gramm.com/*
+// @include		/^https?://pr0gramm.com/.*$/
 // @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.2
+// @version		1.6.0.3
 // @grant		none
 // @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -16,30 +16,37 @@
 
 function waitForPage(){
     if(typeof p !== "undefined"){
-// Verhindert Gewackel beim Scrollen
-p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
-        if ($item.is(this.$currentItem)) {
+		// Verhindert Gewackel beim Scrollen
+p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
+		if (this.$currentItem && $item.is(this.$currentItem)) {
             this.hideItem();
             this._wasHidden = true;
-			this.currentItemId = null;
+            this.currentItemId = null;
             return;
         }
-        var $previousItem = this.$currentItem;
+
         this.$currentItem = $item;
         var $row = $item.parent();
-        var scrollTarget = scrollToFullView ? $row.offset().top - CONFIG.HEADER_HEIGHT + $item.height() + this.rowMargin : $row.offset().top - CONFIG.HEADER_HEIGHT;
-        var animate = !(scrollToFullView && this._scrolledToFullView);
-        this._scrolledToFullView = scrollToFullView;
+
+        var scrollTarget = 0;
+        if (scrollTo == this.SCROLL.FULL) {
+            scrollTarget = $row.offset().top - CONFIG.HEADER_HEIGHT + $item.height();
+        } else if (scrollTo == this.SCROLL.THUMB) {
+            scrollTarget = $row.offset().top - CONFIG.HEADER_HEIGHT - this.rowMargin;
+        } else {
+            scrollTarget = $(document).scrollTop();
+        }
+        var animate = !(scrollTo == this.SCROLL.FULL && this._scrolledToFullView);
+        this._scrolledToFullView = (scrollTo == this.SCROLL.FULL);
         if (this.$itemContainer) {
             var previousItemHeight = this.$itemContainer.find('.item-image').height() || 0;
         }
         if (!$row.next().hasClass('item-container')) {
-            var scrollAdjust = 0;
+
             if (this.$itemContainer) {
                 if (this.$itemContainer.offset().top < $item.offset().top) {
                     scrollTarget -= this.$itemContainer.innerHeight() + this.rowMargin * 2;
                 }
-				
                 if (animate) {
                     this.$itemContainer.find('.gpt').remove();
                     this.$itemContainer.slideUp('fast', function() {
@@ -66,31 +73,30 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollToFullView) {
         this.currentItemSubview = new p.View.Stream.Item(this.$itemContainer, this);
         this.currentItemSubview.show(rowIndex, itemData, previousItemHeight, this.jumpToComment);
         this.jumpToComment = null;
-        this.prefetch($item);
-		//alert(scrollTarget);
+        this.stream.loadInfo(itemData.id, this.prefetch.bind(this, $item));
         if (!this.jumpToItem) {
             if (animate) {
                 //$('body, html').stop(true, true).animate({
-                //    scrollTop: scrollTarget - this.rowMargin
+                //    scrollTop: scrollTarget
                 //}, 'fast');
             } else {
-                //$('body, html').stop(true, true).scrollTop(scrollTarget - this.rowMargin);
+               //$('body, html').stop(true, true).scrollTop(scrollTarget);
             }
         }
-		this.currentItemId = id;
+        this.currentItemId = id;
 }
 
 p.View.Stream.Main.prototype.loaded = function(items, position, error) {
         this.itemsPerRow = p.mainView.thumbsPerRow;
-        this.$container.find('.spinner').remove();
+        this.$container.find('.loader').remove();
         if (!items || !items.length) {
             var msg = null;
             var fm = null;
             if (error && (fm = error.match(/^(nsfw|nsfl|sfw)Required$/))) {
                 msg = 'Das Bild wurde als <em>' + fm[1].toUpperCase() + '</em> markiert.<br/>' +
-                    (p.user.id ? 'Ã„ndere deine Filter-Einstellung' : 'Melde dich an') + ' wenn du es sehen willst.'
+                    (p.user.id ? 'Ã„ndere deine Filter-Einstellung,' : 'Melde dich an,') + ' wenn du es sehen willst.'
             } else if (!this.hasItems) {
-                msg = 'Nichts gefunden &#175;\\_(&#12484;)_/&#175;';
+                msg = this.tab === 'stalk' ? 'Du stelzt noch keine anderen Accounts &#175;\\_(&#12484;)_/&#175;' : 'Nichts gefunden &#175;\\_(&#12484;)_/&#175;';
             }
             if (msg) {
                 this.$container.html('<h2 class="main-message">' + msg + '</h2>');
@@ -113,7 +119,7 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
             var html = this.buildItemRows(items, 0, items.length - numPlaceholders, position);
             this.$streamContainer.prepend(this.prepareThumbsForInsertion(html));
             var newHeight = $('#main-view').height() - (117 - 52);
-            $(document).scrollTop($(document).scrollTop() + (newHeight - prevHeight));
+            //$(document).scrollTop($(document).scrollTop() + (newHeight - prevHeight));
         } else if (position == p.Stream.POSITION.APPEND) {
             var lastRow = this.$streamContainer.find('.stream-row:last');
             var itemCount = lastRow.find('.thumb').length;
@@ -132,15 +138,14 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
         if (this.jumpToItem) {
             var target = $('#item-' + this.jumpToItem);
             if (target.length) {
-                $(document).scrollTop(target.offset().top - CONFIG.HEADER_HEIGHT);
-                this.showItem(target);
+                //$(document).scrollTop(target.offset().top - CONFIG.HEADER_HEIGHT);
+                this.showItem(target, this.SCROLL.THUMB);
             }
             this.jumpToItem = null;
         }
         this.loadInProgress = false;
         this.hasItems = true;
 }
-
 
 p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
     
@@ -214,12 +219,7 @@ waitForPage();
 var spacepressed = false;
 var wheelLast = 0;
 var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-/*
-		var high = $(window).height()-51;
-		var highitemimage = $(window).height()-200;
-		var highcontainer = $(window).height()-52;
-		var widthitemimage = $(window).width()-600;
-*/
+
 // Random Button und Bereits gesehen Button einfügen
 var valueseen = localStorage.getItem('alreadyseen')=='on'? 'active': '';
 $('#head-menu').append('<a class="link '+valueseen+'" title="bereits gesehen-Feature aktivieren\/deaktivieren" id="brille" href=""></a><a class="link" id="random" title="Random Upload aufrufen" href=""></a>');
@@ -230,7 +230,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } '+
 '#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} '+
 '#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }'+
-				
+
 '.ui-widget-content {border: 1px solid #AAAAAA;color: #222222;}'+
 '.ui-slider { position: relative; text-align: left;}'+
 '.ui-slider-horizontal { height: 0.8em;}'+
@@ -275,7 +275,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.opuser .user:before { content: \'OP\'; color: #FFF; padding: 1px 3px; vertical-align: baseline; font-weight: bold; border-radius: 0.25em; background-color: rgb(238, 77, 46); margin-right: 5px; }'+
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
-'div.comment { border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
+'div.comment { margin: 0px 0px 2px !important; padding-top: 5px; border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
 '.vote-fav { left: 230px !important; top: 30px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
 '.side-wide-skyscraper { display:none;}'+
@@ -494,7 +494,7 @@ var inbox = document.getElementById('inboxLink'),
 		var cock = unescape(getCookie('me'));
 		if (cock == "undefined") return;
         var me = JSON.parse(cock);
-        get('http://pr0gramm.com/api/user/info?self=true&flags=7&name=' + escape(me.n), function(data){
+        get('http://pr0gramm.com/api/profile/info?self=true&flags=7&name=' + escape(me.n), function(data){
             b.innerHTML = data.user.score;
         });
     };
@@ -563,8 +563,6 @@ observeDOM(
 				break;
 			}
 		});
-		
-
     },
     true
 );
@@ -1133,8 +1131,6 @@ var ssb = {
         ssb.clear();
         ssb.asd.sg = false;
     }
-
 }
-
 		
 })();
