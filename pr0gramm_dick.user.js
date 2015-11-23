@@ -4,10 +4,10 @@
 // @author		Seglormeister
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
 // @include		/^https?://pr0gramm.com/.*$/
-// @icon		http://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.3
+// @icon		https://pr0gramm.com/media/pr0gramm-favicon.png
+// @version		1.6.0.4
 // @grant		none
-// @require		http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+// @require		https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
 // ==/UserScript==
 
@@ -149,6 +149,42 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
 
 p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
     
+p.View.Stream.Item = p.View.Stream.Item.extend({
+		show: function(rowIndex, itemData, defaultHeight, jumpToComment) {
+			this.parent( rowIndex, itemData, defaultHeight, jumpToComment );
+			this._updateBar( itemData.up, itemData.down );
+		},
+		vote: function(ev, vote) {
+			this.parent( ev, vote );
+			this._updateBenis();
+		},
+		_updateBenis: function() {
+			$('.ext-vote').text( this.data.item.up + ' Up, ' + this.data.item.down + ' Down' );
+			this._updateBar();
+		},
+		_updateBar: function() {
+			var total = this.data.item.up + this.data.item.down;
+			if( !total ) {
+				$('.ext-bar').css( 'opacity', 0 );
+			} else {
+				$('.ext-bar').css( 'opacity', 1 );
+
+				var ratio_up = this.data.item.up / total;
+				var ratio_down = 1.0 - ratio_up;
+				if(ratio_up>=ratio_down) { 
+					$('.ext-bar-item-up').css('background-color', "#A7D713");
+					$('.ext-bar-item-down').css('background-color', "#55585A");
+				} else {
+					$('.ext-bar-item-up').css('background-color', "#55585A");
+					$('.ext-bar-item-down').css('background-color', "#EE4D2E");
+				}
+
+				$('.ext-bar-item-up').css( 'width', Math.round(ratio_up * 100) + "px" );
+				$('.ext-bar-item-down').css( 'width', Math.round(ratio_down * 100) + "px" );
+			}
+		}
+	});   
+    
 p.opClass = function(currentOp, currentUser) {
 	if(!currentOp || !currentUser)
 	return "";
@@ -257,8 +293,8 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; -webkit-transform: translateX(-400px);} 100% { opacity: 1; -webkit-transform: translateX(0); } }'+
 '@keyframes fadeInLeft { 0% { opacity: 1; transform: translateX(-400px);} 100% { opacity: 1; transform: translateX(0); } }'+
 '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}'+
-'.commentview { background: url("http://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
-'.commentview:hover { background: url("http://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
+'.commentview { background: url("https://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}'+
+'.commentview:hover { background: url("https://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}'+
 'div.item-comments.wide { width: 40% !important;}'+//($(window).width() * 0.4)
 'div.item-comments .second .wide { width: 100% !important;}'+
 'div.item-container-content.wide { padding-left: 40% !important;}'+
@@ -266,7 +302,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'div.item-container-content.wide .item-image { max-width: 100% !important;}'+
 'div.item-container-content.wide .stream-prev { left: 40% !important;}'+
 
-'span.vote-fav.wide { left: 130px !important; top: 0px !important;}'+
+'span.vote-fav.wide { left: 23% !important; top: 22% !important;}'+
 '.commentfarbe1 { border-left: 2px solid rgb(51, 52, 150) !important;}'+
 '.commentfarbe2 { border-left: 2px solid rgba(48, 221, 22, 0.72) !important;}'+
 '.commentfarbe3 { border-left: 2px solid rgba(254, 137, 6, 0.85) !important;}'+
@@ -276,7 +312,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 'div.comments-head { background: rgba(42, 46, 49, 0.62);}'+
 'div.comment { margin: 0px 0px 2px !important; padding-top: 5px; border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}'+
-'.vote-fav { left: 230px !important; top: 30px !important;}'+
+'.vote-fav { left: 23% !important; top: 30px !important;}'+
 '.comments-large-rectangle { position:absolute; width: 0px;}'+
 '.side-wide-skyscraper { display:none;}'+
 'form.tag-form { margin: 8px 70px 0px; width: 640px;}'+
@@ -301,7 +337,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { height: calc(100vh - 51px) !important; border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important;}' +//'+high+'
-'.item-container-content { overflow: visible !important; padding-left: 23%; display: table-cell; vertical-align: middle;}'+
+'.item-container-content { padding-left: 15%; overflow: visible !important; display: table-cell; vertical-align: middle;}'+
 'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: calc(100% - 52px) !important; width: 100% !important; }'+//'+highcontainer+'px
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
@@ -328,7 +364,8 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
 '#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
 '.item-image-wrapper { margin: 0px auto;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
-'div.item-vote { left: 80px;}'+
+'div.item-vote { left: 13%;}'+
+'.item-vote * { text-align: left !important;}'+
 '::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
 '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
   
@@ -337,8 +374,11 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.ssb_sb_down {}'+
 '.ssb_sb_over {background: #777;}'+
 '.ssb_st {background: #2A2E31; height:100%; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);cursor:pointer;position:absolute;right:0;top:0;}'+
-'.ssb_up {display:none;cursor:pointer;position:absolute;right:0;top:0;}';
+'.ssb_up {display:none;cursor:pointer;position:absolute;right:0;top:0;}'+
 
+'.ext-vote { color: #BBB; }'+
+'.ext-bar { overflow: hidden; padding-top: 5px; padding-bottom: 2px; }'+
+'.ext-bar div { height: 2px; float: left; transition: width 0.2s ease-out; }';
 
 // CSS Style hinzufügen
     var node = document.createElement("style");
@@ -494,13 +534,13 @@ var inbox = document.getElementById('inboxLink'),
 		var cock = unescape(getCookie('me'));
 		if (cock == "undefined") return;
         var me = JSON.parse(cock);
-        get('http://pr0gramm.com/api/profile/info?self=true&flags=7&name=' + escape(me.n), function(data){
+        get('https://pr0gramm.com/api/profile/info?self=true&flags=7&name=' + escape(me.n), function(data){
             b.innerHTML = data.user.score;
         });
     };
 
 label = document.createElement('div');
-b.style.cssText = 'background-image: url("http://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
+b.style.cssText = 'background-image: url("https://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
 var attr = document.createAttribute("title"); 
 attr.value = 'Dein Benis';
 b.setAttributeNode(attr);
@@ -554,8 +594,8 @@ observeDOM(
 				break;
 				case "item-container":
 					//console.log('neues Bild geöffnet');
+					commentschange();
 					imagechange();
-					//commentschange();
 				break;
 				case "item-comments":
 					//console.log('Comments geladen');
@@ -580,7 +620,7 @@ function commentschange() {
 			
 		   // Custom Scrollbar laden in den Comments, nicht bei Chrome
 		   if (!is_chrome && $('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
-			  if ($('.comments').height() > ($('.item-comments').height()-130)) {
+			  if ($('.comments').height() > ($('.item-comments').height()-125)) {
 				 ssb.scrollbar('item-comments');
 				 $('.item-comments').addClass('scroll');
 				 $('.item-comments').attr('style', 'border-right: 0 !important; background: rgba(23, 23, 24, 0.45) !important');
