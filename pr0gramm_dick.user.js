@@ -5,7 +5,7 @@
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
 // @include		/^https?://pr0gramm.com/.*$/
 // @icon		https://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.4
+// @version		1.6.0.5
 // @grant		none
 // @require		https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -73,6 +73,7 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
         this.currentItemSubview = new p.View.Stream.Item(this.$itemContainer, this);
         this.currentItemSubview.show(rowIndex, itemData, previousItemHeight, this.jumpToComment);
         this.jumpToComment = null;
+       this.prefetch($item);
         this.stream.loadInfo(itemData.id, this.prefetch.bind(this, $item));
         if (!this.jumpToItem) {
             if (animate) {
@@ -185,14 +186,9 @@ p.View.Stream.Item = p.View.Stream.Item.extend({
 		}
 	});   
     
-p.opClass = function(currentOp, currentUser) {
-	if(!currentOp || !currentUser)
-	return "";
-	return currentOp == currentUser ? " opuser" : "";
-};
 
 // Comments Template	
-p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)}{p.opClass(itemOp,c.name)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
+p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <?js if(c.name == op){?> <span class="user-comment-op">OP</span><?js}?> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <?js if( c.showScore || p.user.admin ) {?> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <?js } else { ?> <span class="score-hidden" title="Score noch unsichtbar">â—â—â—</span> <?js } ?> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
  
 p.View.Stream.Comments.SortTime = function(a, b) {
     return (b.created - a.created);
@@ -220,7 +216,7 @@ p.View.Stream.Comments.prototype.loaded = function(item) {
         this.data.commentCount = item.comments.length;
         this.data.tab = this.parentView.parentView.tab || 'new';
         this.data.itemId = item.id;
-		this.data.itemOp = item.user || null;
+        if (item.user) this.data.op = item.user;
         this.render();
 }
 
@@ -503,7 +499,7 @@ function add_seen_marker() {
 }
 
 // Benis Anzeige
-var inbox = document.getElementById('inboxLink'),
+var inbox = document.getElementById('inbox-link'),
     b = document.createElement('span'),
     getCookie = function(name) {
         var value = "; " + document.cookie,
@@ -534,16 +530,17 @@ var inbox = document.getElementById('inboxLink'),
 		var cock = unescape(getCookie('me'));
 		if (cock == "undefined") return;
         var me = JSON.parse(cock);
-        get('https://pr0gramm.com/api/profile/info?self=true&flags=7&name=' + escape(me.n), function(data){
+		var protocol = 'https';
+		if (window.location.protocol != "https:") protocol = 'http';
+        get(protocol + '://pr0gramm.com/api/profile/info?self=true&flags=7&name=' + escape(me.n), function(data){
             b.innerHTML = data.user.score;
         });
     };
 
 label = document.createElement('div');
 b.style.cssText = 'background-image: url("https://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
-var attr = document.createAttribute("title"); 
-attr.value = 'Dein Benis';
-b.setAttributeNode(attr);
+b.setAttribute('title', 'Dein Benis');
+b.className = 'benisdisplay';
 label.className = 'date-label';
 label.style.cssText = 'position: absolute; left: 0px; right: 0px; bottom: 0px; text-align: center; font-size: 10px; color: #FFFFFF !important; text-shadow: 1px 1px 0px black, 1px -1px 0px black, -1px 1px 0px black, -1px -1px 0px black; background-color: rgba(0,0,0,.5);';
 inbox.parentNode.insertBefore(b, inbox);
