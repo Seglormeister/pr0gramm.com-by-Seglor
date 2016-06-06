@@ -1,4 +1,4 @@
-pr0gramm.com-by-Seglor 1.6.0.5
+pr0gramm.com-by-Seglor 1.6.0.6
 ======================
 
 ![prooo](https://cloud.githubusercontent.com/assets/1558446/6137566/4ce717fc-b17a-11e4-8c1e-65a1939e03f6.PNG)
@@ -25,7 +25,7 @@ Dies ist ein Userscript für alle gängigen Brauser, um einige Neuerungen hinzuz
 - Bildgröße an Bildschirm angepasst
 - Kommentare nach Zeit/Beliebtheit sortieren
 - Random Upload Button
-- OP Kennzeichnung in Kommentaren (NEU!)
+- OP Kennzeichnung in Kommentaren (NEU!) -> UPDATE: Ist nun Standard auf pro!
 - Bessere Lesbarkeit der Kommentare durch Farben (NEU!)
 - Bildzoom mit der Leertaste (per Drag and Drop verschieben) (NEU!)
 - Filteranzeige unter jedem Bild (NEU!)
