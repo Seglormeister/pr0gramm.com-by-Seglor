@@ -5,7 +5,7 @@
 // @description	Verbessert das pr0gramm mit einigen Erweiterungen
 // @include		/^https?://pr0gramm.com/.*$/
 // @icon		https://pr0gramm.com/media/pr0gramm-favicon.png
-// @version		1.6.0.5
+// @version		1.6.0.6
 // @grant		none
 // @require		https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
 // @updateURL	https://github.com/Seglormeister/Pr0gramm.com-by-Seglor/raw/master/pr0gramm_dick.user.js
@@ -24,10 +24,8 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
             this.currentItemId = null;
             return;
         }
-
         this.$currentItem = $item;
         var $row = $item.parent();
-
         var scrollTarget = 0;
         if (scrollTo == this.SCROLL.FULL) {
             scrollTarget = $row.offset().top - CONFIG.HEADER_HEIGHT + $item.height();
@@ -42,7 +40,6 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
             var previousItemHeight = this.$itemContainer.find('.item-image').height() || 0;
         }
         if (!$row.next().hasClass('item-container')) {
-
             if (this.$itemContainer) {
                 if (this.$itemContainer.offset().top < $item.offset().top) {
                     scrollTarget -= this.$itemContainer.innerHeight() + this.rowMargin * 2;
@@ -73,7 +70,7 @@ p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
         this.currentItemSubview = new p.View.Stream.Item(this.$itemContainer, this);
         this.currentItemSubview.show(rowIndex, itemData, previousItemHeight, this.jumpToComment);
         this.jumpToComment = null;
-       this.prefetch($item);
+       //this.prefetch($item);
         this.stream.loadInfo(itemData.id, this.prefetch.bind(this, $item));
         if (!this.jumpToItem) {
             if (animate) {
@@ -148,8 +145,8 @@ p.View.Stream.Main.prototype.loaded = function(items, position, error) {
         this.hasItems = true;
 }
 
-p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.time.readableTime()}" href="/new/{item.id}">{item.time.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url={item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
-    
+p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?> <?js if( canPlayWebM ) { ?> <video class="item-image" src="{item.image}" type="video/webm" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <canvas class="item-image"></canvas> <?js } ?> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
+
 p.View.Stream.Item = p.View.Stream.Item.extend({
 		show: function(rowIndex, itemData, defaultHeight, jumpToComment) {
 			this.parent( rowIndex, itemData, defaultHeight, jumpToComment );
@@ -195,6 +192,7 @@ p.View.Stream.Comments.SortTime = function(a, b) {
 }
 
 p.View.Stream.Comments.prototype.loaded = function(item) {
+
         item.id = (item.id || this.data.itemId);
 		if (localStorage.getItem('comorder')) {
 			if (localStorage.getItem('comorder') == 'new') {
@@ -374,7 +372,9 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 
 '.ext-vote { color: #BBB; }'+
 '.ext-bar { overflow: hidden; padding-top: 5px; padding-bottom: 2px; }'+
-'.ext-bar div { height: 2px; float: left; transition: width 0.2s ease-out; }';
+'.ext-bar div { height: 2px; float: left; transition: width 0.2s ease-out; }'+
+
+'svg.flags { position: absolute; left: 0; top: 0; z-index: 1; width: 20px; height: 20px; margin-left: -22px;}';
 
 // CSS Style hinzufügen
     var node = document.createElement("style");
@@ -578,7 +578,7 @@ observeDOM(
 		$.each(elements, function(idx, obj) {
 			var test = jQuery(obj.target);
 			var value = test[0].id || test[0].className;
-			//console.log(test);
+			console.log(value);
 			if (value.length > 12 && value.match('(item-comments)')) value = 'item-comments';
 			switch(value) {
 				case "main-view":
@@ -590,12 +590,12 @@ observeDOM(
 					streamchange();
 				break;
 				case "item-container":
-					//console.log('neues Bild geöffnet');
+					console.log('neues Bild geöffnet');
 					commentschange();
 					imagechange();
 				break;
 				case "item-comments":
-					//console.log('Comments geladen');
+					console.log('Comments geladen');
 					commentschange();
 				break;
 			}
