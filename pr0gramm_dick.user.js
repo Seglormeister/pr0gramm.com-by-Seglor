@@ -331,7 +331,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#head { width: 100% !important }'+
 'div.comment-vote { left: 5px !important;}'+
 '.item-comments { height: calc(100vh - 51px) !important; border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important;}' +//'+high+'
-'.item-container-content { padding-left: 15%; overflow: visible !important; display: table-cell; vertical-align: middle;}'+
+'.item-container-content { height: calc(100vh - 52px); display: flex; flex-direction: column; padding-left: 15%; overflow: visible !important;}'+
 'div.item-container { padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: calc(100% - 52px) !important; width: 100% !important; }'+//'+highcontainer+'px
 'div.stream-row { clear: none !important; }'+
 '#main-view { max-width: 101% !important; width: 101% !important; }'+
@@ -345,7 +345,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 'a.item-fullsize-link { right: 10px !important; position: absolute; color: #fff; opacity: 0.7; padding: 0 24px; font-size: 48px; right: 0; top: 0; text-shadow: 0 0 3px #000; z-index: 10;}'+
 'a.item-fullsize-link:hover { color: #ee4d2e; opacity: 1; text-shadow: none;}'+
 //'.item-container-content img { max-height: calc(100% - 200px);}'+//'+highitemimage+'px
-'.item-image { max-height: calc(100vh - 200px);}'+//max-width: calc(100vw - 600px) !important; 		'+highitemimage+'px '+widthitemimage+'px
+'.item-image { max-height: calc(100vh - 200px); width: auto !important; height: auto !important;}'+//max-width: calc(100vw - 600px) !important; 		'+highitemimage+'px '+widthitemimage+'px
 'video.item-image { width: auto;}'+
 'div.video-position-bar { max-width: calc(100vw - 600px) !important;}'+//'+widthitemimage+'px
 'div.item-tags { height: 37px; padding: 4px 0 8px 240px !important;}'+
@@ -357,7 +357,7 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#footer-links a { color: rgb(238, 77, 46);}'+
 '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
 '#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
-'.item-image-wrapper { margin: 0px auto;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
+'.item-image-wrapper { display: flex; align-items: center; flex-grow: 1; max-height: calc(100vh - 200px); margin: 0px auto;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
 'div.item-vote { left: 13%;}'+
 '.item-vote * { text-align: left !important;}'+
 '::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
