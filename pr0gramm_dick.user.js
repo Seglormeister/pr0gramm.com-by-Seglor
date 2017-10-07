@@ -154,7 +154,7 @@
                 this.hasItems = true;
             };
 
-            p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?>  <video class="item-image" src="{item.image}" type="video/mp4" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
+            p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?><?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?>  <video class="item-image" src="{item.image}" type="video/mp4" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div></div> ';
 
             p.View.Stream.Item = p.View.Stream.Item.extend({
                 show: function (rowIndex, itemData, defaultHeight, jumpToComment) {
@@ -290,22 +290,19 @@
         '.stream-next, .stream-prev {position: absolute !important; color: rgba(245, 247, 246, 0.29) !important; font-size: 38px !important; padding: 0 !important;top: 0 !important;bottom: 0 !important;margin: 0 !important;display: flex !important;height: 100% !important;justify-content: center;align-items: center;}' +
         '.stream-next:hover, .stream-prev:hover { color: rgba(238, 77, 46, 1.0) !important; }' +
         '.stream-prev { left: 10px !important; }' +
-        '.item-comments { -webkit-transform: translateZ(0); position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}' +
+        '.item-comments { outline: none !important; -webkit-transform: translateZ(0); top: 0 !important; left: 0; width: 300px; max-height: 100vh; overflow-y: auto; overflow-x: hidden;}' +
         '.item-comments textarea.comment { resize: none; box-shadow: 0 0 0 2px rgba(72, 72, 72, 0.36);}' +
         'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}' +
 
 
-        '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; -webkit-transform: translateX(-400px);} 100% { opacity: 1; -webkit-transform: translateX(0); } }' +
-        '@keyframes fadeInLeft { 0% { opacity: 1; transform: translateX(-400px);} 100% { opacity: 1; transform: translateX(0); } }' +
+        '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; margin-left: -400px;} 100% { opacity: 1; margin-left:0; } }' +
+        '@keyframes fadeInLeft { 0% { opacity: 1;  margin-left: -400px;} 100% { opacity: 1; margin-left:0; } }' +
         '.fadeInLeft { -webkit-animation-name: fadeInLeft; animation-name: fadeInLeft;}' +
         '.commentview { background: url("https://i.imgur.com/frLdEe2.png"); float: right; cursor: pointer; background-size: 18px 18px; height: 18px; width: 18px;}' +
         '.commentview:hover { background: url("https://i.imgur.com/Am2MFVM.png"); background-size: 18px 18px; height: 18px; width: 18px;}' +
         'div.item-comments.wide { width: 40% !important;}' +//($(window).width() * 0.4)
         'div.item-comments .second .wide { width: 100% !important;}' +
-        'div.item-container-content.wide { padding-left: 40% !important;}' +
-        'div.item-container-content.wide .item-image-wrapper { max-width: 90% !important;}' +
         'div.item-container-content.wide .item-image { max-width: 100% !important;}' +
-        'div.item-container-content.wide .stream-prev { left: calc(40% + 10px) !important;}' +
 
         'span.vote-fav.wide { left: 23% !important; top: 22% !important;}' +
         '.commentfarbe1 { border-left: 2px solid rgb(51, 52, 150) !important;}' +
@@ -341,9 +338,9 @@
         'body.two-sidebars div#head, body.two-sidebars div#page { padding: 0 !important;}' +
         '#head { width: 100% !important }' +
         'div.comment-vote { left: 5px !important;}' +
-        '.item-comments { height: calc(100vh - 51px) !important; border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; top: 51px !important; width: 352px !important;}' +//'+high+'
-        '.item-container-content { height: calc(100vh - 52px); display: flex; flex-direction: column; padding-left: 352px; overflow: visible !important;}' +
-        'div.item-container { margin-left: -' + viewPadding + ';padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: table; height: calc(100% - 52px) !important; width: 100% !important; }' +//'+highcontainer+'px
+        '.item-comments { flex-shrink: 0;transition: width .2s linear; border-right: 3px solid rgb(42, 46, 49); background: none repeat scroll 0% 0% rgba(23, 23, 24, 0.89); overflow-x:hidden; width: 352px !important;}' +//'+high+'
+        '.item-container-content { height: calc(100vh - 52px); display: flex; flex-direction: column; flex-grow: 1; overflow: visible !important;}' +
+        'div.item-container { margin-left: -' + viewPadding + ';padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: flex; height: calc(100% - 52px) !important; width: 100% !important; }' +//'+highcontainer+'px
         'div.stream-row { clear: none !important; }' +
         '#main-view { max-width: 101% !important; width: 101% !important; }' +
         '.user-info { padding: 16px 20px 0 16px; margin: 0 !important; }' +
@@ -942,6 +939,11 @@
                     spacepressed = false;
                 }
             }
+        }
+
+        var elem = $('.item-comments');
+        if(! elem.is(":focus") && (event.keyCode === 38 || event.keyCode === 40)) {
+            elem.attr("tabindex",-1).focus();
         }
     }
 
