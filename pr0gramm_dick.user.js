@@ -23,6 +23,7 @@ function waitForPage(){
 
 		// Verhindert Gewackel beim Scrollen
 p.View.Stream.Main.prototype.showItem = function($item, scrollTo) {
+
 		if (this.$currentItem && $item.is(this.$currentItem)) {
             this.hideItem();
             this._wasHidden = true;
@@ -174,7 +175,7 @@ p.View.Stream.Item = p.View.Stream.Item.extend({
 
 				var ratio_up = this.data.item.up / total;
 				var ratio_down = 1.0 - ratio_up;
-				if(ratio_up>=ratio_down) { 
+				if(ratio_up>=ratio_down) {
 					$('.ext-bar-item-up').css('background-color', "#A7D713");
 					$('.ext-bar-item-down').css('background-color', "#55585A");
 				} else {
@@ -186,12 +187,12 @@ p.View.Stream.Item = p.View.Stream.Item.extend({
 				$('.ext-bar-item-down').css( 'width', Math.round(ratio_down * 100) + "px" );
 			}
 		}
-	});   
-    
+	});
 
-// Comments Template	
+
+// Comments Template
 p.View.Stream.Comments.prototype.template = '<div class="comments-head"> <span class="pict">c</span> {"Kommentar".inflect(commentCount)} <span class="commentview" title="Erweiterte Kommentaransicht"></span></div> <div class="comments-large-rectangle gpt" id="gpt-rectangle-comments" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <form class="comment-form" method="post"> <textarea class="comment" name="comment" required placeholder="Kommentar schreiben..."></textarea> <input type="hidden" name="parentId" value="0"/> <input type="hidden" name="itemId" value="{params.id}"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/><?js if(commentCount > 0) { ?> <span class="sorter"><a id="com-new" href="">[ Neuste</a> | <a id="com-top" href="">Top ]</a></span> <?js } ?> </div> </form> <form class="comment-edit-form" method="post"> <textarea class="comment" required name="comment"></textarea> <input type="hidden" name="commentId" value="0"/> <div> <input type="submit" value="Abschicken"/> <input type="button" value="Abbrechen" class="cancel"/> </div> </form> <div class="comments"> <?js var recurseComments = function( comments, level, farbe ) { ?> <div class="comment-box"> <?js for( var i = 0; i < comments.length; i++ ) { var c = comments[i]; ?> <div class="comment{p.voteClass(c.vote)} commentfarbe{farbe}" id="comment{c.id}"> <div class="comment-vote"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> </div> <div class="comment-content"> {c.content.format()} </div> <div class="comment-foot"> <?js if(c.name == op){?> <span class="user-comment-op">OP</span><?js}?> <a href="#user/{c.name}" class="user um{c.mark}">{c.name}</a> <?js if( c.showScore || p.user.admin ) {?> <span class="score" title="{c.up} up, {c.down} down">{"Punkt".inflect(c.score)}</span> <?js } else { ?> <span class="score-hidden" title="Score noch unsichtbar">●●●</span> <?js } ?> <a href="#{tab}/{itemId}:comment{c.id}" class="time permalink" title="{c.createdReadable}">{c.createdRelative}</a> <?js if( level < CONFIG.COMMENTS_MAX_LEVELS && !linearComments ) {?> <a href="#{tab}/{itemId}:comment{c.id}" class="comment-reply-link action"><span class="pict">r</span> antworten</a> <?js } ?> <?js if( /*c.user == p.user.name ||*/ p.user.admin ) {?> [ <span class="comment-delete action">del</span> / <a href="#{tab}/{itemId}:comment{c.id}" class="comment-edit-link action">edit</a> ] <?js } ?> </div> </div> <?js if( c.children.length ) { if(farbe==5) farbe = 0; recurseComments(c.children, level+1, farbe+1); } ?> <?js } ?> </div> <?js }; ?> <?js recurseComments(comments, 1, 1); ?> </div> ';
- 
+
 p.View.Stream.Comments.SortTime = function(a, b) {
     return (b.created - a.created);
 }
@@ -209,7 +210,7 @@ p.View.Stream.Comments.prototype.loaded = function(item) {
 			localStorage.setItem('comorder', 'top');
 			this.data.linearComments = (item.id <= CONFIG.LAST_LINEAR_COMMENTS_ITEM);
 		}
-        
+
         if (item.commentId) {
             p.user.voteCache.votes.comments[item.commentId] = 1;
             this.data.params.comment = 'comment' + item.commentId;
@@ -276,18 +277,18 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '.ui-slider-horizontal .ui-slider-handle { margin-left: -0.6em; top: -0.3em;}'+
 '.ui-slider .ui-slider-handle { cursor: default; height: 1.2em; position: absolute; width: 1.2em; z-index: 2;}'+
 '#slider { float: left; clear: left; width: 300px; margin: 30px 15px 5px; }#slider .ui-slider-range { background: #EE4D2E; } #slider .ui-slider-handle { border-color: #EE4D2E; }'+
-'@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+			
+'@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} '+
 '.item-comments {width: 23% !important;}} '+
 'div.item-details {padding: 8px 0px 8px 50px;}'+
 
 '#head { padding-left: 0px !important; z-index:200; }'+
 '.stream-next { right: 10px !important; }'+
-'.stream-next, .stream-prev { padding: 200px 0 0 !important; margin: 200px 0px 0px !important; position: fixed !important; color: rgba(245, 247, 246, 0.29) !important; font-size: 38px !important; }'+
+'.stream-next, .stream-prev {position: absolute !important; color: rgba(245, 247, 246, 0.29) !important; font-size: 38px !important; padding: 0 !important;top: 0 !important;bottom: 0 !important;margin: 0 !important;display: flex !important;height: 100% !important;justify-content: center;align-items: center;}'+
 '.stream-next:hover, .stream-prev:hover { color: rgba(238, 77, 46, 1.0) !important; }'+
-'.stream-prev { left: 362px !important; }'+
+'.stream-prev { left: 10px !important; }'+
 '.item-comments { -webkit-transform: translateZ(0); position: fixed !important; top: 0; left: 0; width: 300px;  height: 100vh;  max-height: 100vh; overflow-y: auto; overflow-x: hidden;}'+
 '.item-comments textarea.comment { resize: none; box-shadow: 0 0 0 2px rgba(72, 72, 72, 0.36);}'+
-'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}'+		
+'div.comment-box > div.comment-box { padding: 0 0 0 14px; background: none repeat scroll 0px 0px rgba(0, 0, 0, 0.1) !important; border-left: 1px solid #292929;}'+
 
 
 '@-webkit-keyframes fadeInLeft { 0% { opacity: 1; -webkit-transform: translateX(-400px);} 100% { opacity: 1; -webkit-transform: translateX(0); } }'+
@@ -363,12 +364,12 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
 '#footer-links a { color: rgb(238, 77, 46);}'+
 '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}'+
 '#footer-links div:nth-child(2n) a:hover{color:#F5F7F6;}'+
-'.item-image-wrapper { display: flex; align-items: center; flex-grow: 1; margin: 0px auto; overflow: hidden;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
+'.item-image-wrapper { width: 100%; justify-content: center; display: flex; align-items: center; flex-grow: 1; margin: 0px auto; overflow: hidden;}'+//max-width: calc(100% - 600px); '+widthitemimage+'px
 'div.item-vote { left: 13%;}'+
 '.item-vote * { text-align: left !important;}'+
-'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+ 
+'::-webkit-scrollbar { width: 10px;} ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3); -webkit-border-radius: 7px; border-radius: 7px;}'+
 '::-webkit-scrollbar-thumb { border-radius: 7px; -webkit-border-radius: 7px; background: #949494; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); }'+
-  
+
 '.ssb_down {display:none;background:#000;bottom:0;cursor:pointer;position:absolute;right:0;}'+
 '.ssb_sb {border-radius: 7px; -webkit-border-radius: 7px; background: rgb(102, 102, 102); -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);cursor:pointer;position:absolute;right:0;}'+
 '.ssb_sb_down {}'+
@@ -388,16 +389,16 @@ var css = '#upload-form input[type="submit"] { position:relative; top: 420px; le
     node.appendChild(document.createTextNode(css));
     var heads = document.getElementsByTagName("head");
     if (heads.length > 0) {
-        heads[0].appendChild(node); 
+        heads[0].appendChild(node);
     } else {
         document.documentElement.appendChild(node);
     }
-  
+
 // INDEXEDDB
 window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
-window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;	
-	
+window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
 if (!window.indexedDB) {
     window.alert("Dein Brauser unterstützt keine Version von IndexedDB. Das 'bereits angesehen' Feature wird dir nicht zur Verfügung stehen. Das pr0gramm mag dich trotzdem.");
 }
@@ -420,7 +421,7 @@ function saveid() {
 					//console.log("trans Error:", evt.target.error.name);
 				};
 				var store = trans.objectStore("uploads");
-				var requestAdd = store.add({id: uploadid[1], uploadid: uploadid[1]});	
+				var requestAdd = store.add({id: uploadid[1], uploadid: uploadid[1]});
 				requestAdd.onsuccess = function(evt) {
 					$('#item-' + uploadid[1]).append('<div class="seen" style="border-bottom: 1px solid  rgba(255, 72, 0, 0.84); height: 17px; background: none repeat scroll 0% 0% rgba(22, 22, 24, 0.7); position: relative; width: 128px; top: -17px;"><img style="opacity: 0.7; margin:auto; width:13px; padding-top: 1px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADRSURBVHjajNI9TgJRFMXx3+AgxMpIjI1hD5TExC1AZ0dhS2FtIpXaU7EBKiiMrsDKxIqCBZgYNkDDDAV+NI9kMoFhTndvzj/33PdutEoT6KOHI/v1izc8x7jDEAukBdAxnlCLVmnyFRqXDusDFzGWqCmnJaqVkDUuMHbQzET8q+QMJ2hl6ke84jRryk84xwy3qOMBV5gXQd+4wSTUbXzm8+7aZYoN1ruALRThJ9d/2fMomy10FsAyqqMRY4xB+LjkwEVcYxSF27tHt8Skdwz+BwAIXSigFHjUGwAAAABJRU5ErkJggg=="></div>');
 					 console.log("ID saved: ", uploadid[1]);
@@ -551,7 +552,7 @@ label.style.cssText = 'position: absolute; left: 0px; right: 0px; bottom: 0px; t
 inbox.parentNode.insertBefore(b, inbox);
 update();
 setInterval(update, 40000);
-	
+
 // Observer für Seitenänderung
     observeDOM = (function(){
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
@@ -565,7 +566,7 @@ setInterval(update, 40000);
                     }
                 });
                 obs.observe(obj, {
-                    childList: true, 
+                    childList: true,
                     subtree: subtree
                 });
             }
@@ -576,7 +577,7 @@ setInterval(update, 40000);
         }
     })();
 
-	
+
 observeDOM(
     document.getElementById('page'),
     function(elements){
@@ -619,7 +620,7 @@ function commentschange() {
 				    //$('.comment-form').fadeIn(300);
 				    //$('.comments').fadeIn(300);
 			}*/
-			
+
 		   // Custom Scrollbar laden in den Comments, nicht bei Chrome
 		   if (!is_chrome && $('.item-comments').length && !$('.item-comments').hasClass('scroll')) {
 			  if ($('.comments').height() > ($('.item-comments').height()-125)) {
@@ -632,7 +633,7 @@ function commentschange() {
 				 }
 			  }
 		   }
-		
+
 			// Kommentaransicht ändern
 			if ($('.item-comments').length) {
 				// nur einmalig einbinden
@@ -643,7 +644,7 @@ function commentschange() {
 						$("div.item-comments").each(function(index) {
 							$(this).toggleClass("wide");
 						});
-				
+
 						//Scrollbalken anpassen
 						if (!is_chrome) {
 							if (!$('.item-comments').hasClass('scroll')) {
@@ -667,7 +668,7 @@ function commentschange() {
 					});
 				}
 			}
-		
+
 			// Kommentarsortierung laden
 			if (!$('#com-new').hasClass('active') && !$('#com-top').hasClass('active')) {
 				if (localStorage.getItem("comorder") != null) {
@@ -676,7 +677,7 @@ function commentschange() {
 					$('#com-top').addClass('active');
 				}
 			}
-			
+
 			// Click Events für Sortierung
 			if ($('#com-new').length) {
 				$('#com-new').click(function() {
@@ -697,7 +698,7 @@ function commentschange() {
 				});
 
 			}
-	
+
 			// Zu Kommentar springen
 			var commentid = window.location.pathname.split(':comment')[1];
 			if (commentid) {
@@ -707,8 +708,9 @@ function commentschange() {
 }
 
 function imagechange() {
-
-	$('.item-image-wrapper').click(function(e) {
+    var wrapper = $('.item-image-wrapper');
+    wrapper[0].style.alignItems = 'center';
+    wrapper.click(function(e) {
 		if(e.target != this) return;
 		$('.item-image:visible').click();
 	});
@@ -717,22 +719,29 @@ function imagechange() {
 				saveid();
 				//add_seen_marker();
 			}
-	
+
 			// + bei resized Bildern hinzufügen
 			if (!$('.item-fullsize-link').length) {
 				var imgu = document.getElementsByClassName('item-image')[0];
 				if (imgu && imgu.naturalHeight > 460) {
 					var link = imgu.getAttribute('src');
-					$('.item-image-wrapper').append('<a class="item-fullsize-link" target="_blank" href="'+link+'" style="">+</a>');
+                    wrapper.append('<a class="item-fullsize-link" target="_blank" href="'+link+'" style="">+</a>');
 				}
 			}
-			
+
+			// Bild nicht zentrieren, wenn größer als Wrapper
+			var mediaHeight = wrapper.find('.item-image').height();
+			if(wrapper.height() < mediaHeight) {
+			    console.log(wrapper);
+                wrapper[0].style.alignItems = 'flex-start';
+            }
+
 			// Scrollbar in Bildansicht ausblenden
 			var stil = document.getElementsByTagName('html')[0];
 			if (stil.style.overflow != 'hidden') {
 				stil.style.overflow = 'hidden';
 			}
-			
+
 			// zum passenden Thumb scrollen
 			var itemId = document.URL;
 			var itemname = '#item-' + itemId.substring(itemId.lastIndexOf('/') + 1, itemId.length);
@@ -749,42 +758,42 @@ function streamchange() {
 		if (!$('.item-container').length) {
 			var stil = document.getElementsByTagName('html')[0];
 			if (stil.style.overflowX != 'hidden' || stil.style.overflowY != 'auto') {
-				stil.style.overflowX = 'hidden';	
-				stil.style.overflowY = 'auto';	
+				stil.style.overflowX = 'hidden';
+				stil.style.overflowY = 'auto';
 			}
 		}
-		
+
 		// Bereits gesehen Markierungen in den thumbs
 		if ($('#brille').hasClass('active')) {
 			//console.log('streamchange_show_seenids');
 			show_seenids();
 		}
-			
+
 			// SlideIn Effekt für Comments
 			if ($('.stream-row').length) {
 				$('.stream-row a').click(function() {
 					if (!$('.item-comments:first').hasClass('fadeInLeft')) {
 						$('.item-comments:first').addClass('fadeInLeft');
-						$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'}); 
+						$('.item-comments:first').css({'-webkit-animation-duration': '1s', 'animation-duration': '1s', '-webkit-animation-fill-mode': 'both', 'animation-fill-mode': 'both'});
 					}
 				});
 			}
-		
+
 }
 
 function headerchange() {
 		if (!$('.item-container').length) {
 			var stil = document.getElementsByTagName('html')[0];
 			if (stil.style.overflowX != 'hidden' || stil.style.overflowY != 'auto') {
-				stil.style.overflowX = 'hidden';	
-				stil.style.overflowY = 'auto';	
+				stil.style.overflowX = 'hidden';
+				stil.style.overflowY = 'auto';
 			}
 		}
 
 			// Bereits gesehen Button, nur einmal einbinden
 				var event = $._data( $('#brille')[0], 'events' );
 			if ($('#brille').length && !event) {
-			
+
 				$('#brille').click(function() {
 					$('#brille').toggleClass("active");
 					var value = $("#brille").hasClass("active")? 'on' : 'off';
@@ -805,7 +814,7 @@ function headerchange() {
 			// Random Button aktualisieren
 			if (document.getElementById('random').getAttribute('href') == '') prepareButton();
 }
-	
+
 // Space Vergrößerung und links/rechts Bildwechsel
 document.addEventListener("keydown", keydown, false);
 
@@ -829,7 +838,7 @@ function startDrag(e) {
             if(!targ.style.left) { targ.style.left='0px'};
             if (!targ.style.top) { targ.style.top='0px'};
 
-            // calculate integer values for top and left 
+            // calculate integer values for top and left
             // properties
             coordX = parseInt(targ.style.left);
             coordY = parseInt(targ.style.top);
@@ -840,7 +849,7 @@ function startDrag(e) {
             return false;
 
 }
-        
+
 function dragDiv(e) {
             if (!drag) {return};
             if (!e) { var e= window.event};
@@ -850,21 +859,21 @@ function dragDiv(e) {
             targ.style.top=coordY+e.clientY-offsetY+'px';
             return false;
 }
-        
+
 function stopDrag() {
     drag=false;
 }
-		
+
 var clickevent;
 function keydown(event) {
 	if (event.keyCode == '32') {
-		
+
 		// falls textarea aktiv
 		var el = document.activeElement;
 		if (el && (el.tagName.toLowerCase() == 'input' && el.type == 'text' || el.tagName.toLowerCase() == 'textarea')) {
 			return;
 		}
-		
+
 		// Bild mit Space vergrößern
 		if ($('.item-image').length) {
 			event.preventDefault();
@@ -894,7 +903,7 @@ function keydown(event) {
 				var full = $('.item-fullsize-link').attr('href');
 				$('.item-fullsize-link').attr('href', $('.item-image').attr('src'));
 				$('.item-image').attr('src', full);
-				
+
 				spacepressed = false;
 			}
 		}
@@ -919,7 +928,7 @@ function handleWheel(event) {
 		if (isHover(coms[0])) {
 			return;
 		}
-		
+
         event.preventDefault();
         event.stopPropagation();
         event.returnValue=false;
@@ -933,14 +942,14 @@ function handleWheel(event) {
 		}
 
 	    var delta = 0;
-        if (!event) 
+        if (!event)
                 event = window.event;
-        if (event.wheelDelta) { 
+        if (event.wheelDelta) {
                 delta = event.wheelDelta/120;
-        } else if (event.detail) { 
+        } else if (event.detail) {
                 delta = -event.detail/3;
         }
-		
+
         if(delta<0){
             $('.stream-next').click();
 		}else{
@@ -954,7 +963,7 @@ if (!e) return false;
     return (e.parentElement.querySelector(':hover') === e);
 }
 
-// Code für den Random Button     
+// Code für den Random Button
 function prepareButton() {
 			if ($('.stream-row a:first').length) {
 				var str = $('.stream-row a:first').attr('id');
@@ -968,7 +977,7 @@ function prepareButton() {
 		dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
 }
 
-    
+
 // Custom Scrollbar
 var ssb = {
     aConts  : [],
@@ -992,7 +1001,7 @@ var ssb = {
         cont_clone.style.overflow = "hidden";
         cont.parentNode.appendChild(cont_clone);
         cont_clone.appendChild(cont);
-		
+
         cont.className = cont.className.replace("fadeInLeft", "");
 		cont.className += ' second';
         // adding new container into array
@@ -1055,7 +1064,7 @@ var ssb = {
         // onscroll - change positions of scroll element
         cont.ssb_onscroll = function () {
             //var coms = document.getElementsByClassName("comments")[0];
-            
+
             //if (isHover(coms[0])) {
 			if (cont_id == 'item-comments') {
                this.ratio = this.offsetHeight / ($('.comments').outerHeight(true) + 131);//187+33
@@ -1074,11 +1083,11 @@ var ssb = {
         // start scrolling
         cont.ssb_onscroll();
         ssb.refresh();
-        
+
         // binding own onscroll event
         cont.onscroll = cont.ssb_onscroll;
 		var conte = document.getElementById('page');
-		
+
 		//elem.onscroll = cont.ssb_onscroll;
         return cont;
     },
