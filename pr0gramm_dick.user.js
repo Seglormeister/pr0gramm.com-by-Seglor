@@ -149,7 +149,7 @@
                 }
                 this.loadInProgress = false;
                 this.hasItems = true;
-            }
+            };
 
             p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?>  <video class="item-image" src="{item.image}" type="video/mp4" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?> </div> ';
 
@@ -244,7 +244,7 @@
             }
 
         } else {
-            console.log('p undefined');
+            console.debug('p undefined');
             setInterval(function () {
                 waitForPage();
             }, 250);
@@ -406,36 +406,36 @@
 
 
     function saveid() {
-        //console.log('saveid');
+        //console.debug('saveid');
         if ($('.item-image').length && window.location.pathname.match('/([0-9]{2,7})')) {
             var db;
             var open = indexedDB.open('UploadsSeen', 1);
             open.onsuccess = function (evt) {
                 db = this.result;
-                console.log('openDb Save DONE');
+                console.debug('openDb Save DONE');
                 var uploadid = window.location.pathname.match('/([0-9]{2,7})');
                 var trans = db.transaction('uploads', 'readwrite');
                 trans.onsuccess = function (evt) {
-                    console.log('trans saved: ', uploadid[1]);
+                    console.debug('trans saved: ', uploadid[1]);
                 };
                 trans.onerror = function (evt) {
-                    //console.log("trans Error:", evt.target.error.name);
+                    //console.debug("trans Error:", evt.target.error.name);
                 };
                 var store = trans.objectStore('uploads');
                 var requestAdd = store.add({id: uploadid[1], uploadid: uploadid[1]});
                 requestAdd.onsuccess = function (evt) {
                     $('#item-' + uploadid[1]).append('<div class="seen" style="border-bottom: 1px solid  rgba(255, 72, 0, 0.84); height: 17px; background: none repeat scroll 0% 0% rgba(22, 22, 24, 0.7); position: relative; width: 128px; top: -17px;"><img style="opacity: 0.7; margin:auto; width:13px; padding-top: 1px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAACXBIWXMAABJ0AAASdAHeZh94AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADRSURBVHjajNI9TgJRFMXx3+AgxMpIjI1hD5TExC1AZ0dhS2FtIpXaU7EBKiiMrsDKxIqCBZgYNkDDDAV+NI9kMoFhTndvzj/33PdutEoT6KOHI/v1izc8x7jDEAukBdAxnlCLVmnyFRqXDusDFzGWqCmnJaqVkDUuMHbQzET8q+QMJ2hl6ke84jRryk84xwy3qOMBV5gXQd+4wSTUbXzm8+7aZYoN1ruALRThJ9d/2fMomy10FsAyqqMRY4xB+LjkwEVcYxSF27tHt8Skdwz+BwAIXSigFHjUGwAAAABJRU5ErkJggg=="></div>');
-                    console.log('ID saved: ', uploadid[1]);
+                    console.debug('ID saved: ', uploadid[1]);
                 };
                 requestAdd.onerror = function (evt) {
-                    //console.log("Save Error:", evt.target.error.name);
+                    //console.debug("Save Error:", evt.target.error.name);
                 };
             };
             open.onerror = function (evt) {
-                console.log('openDb Error:', evt.target.errorCode);
+                console.debug('openDb Error:', evt.target.errorCode);
             };
             open.onupgradeneeded = function (evt) {
-                console.log('openDb.onupgradeneeded');
+                console.debug('openDb.onupgradeneeded');
                 var store = evt.target.result.createObjectStore('uploads', {keyPath: 'id'});
                 store.createIndex('uploadid', 'uploadid', {unique: true});
             };
@@ -443,14 +443,14 @@
     }
 
     function show_seenids() {
-        //console.log('show_seenids');
+        //console.debug('show_seenids');
         if ($('#stream').length) {
             var ids = 0;
             var db;
             var open = indexedDB.open('UploadsSeen', 1);
             open.onsuccess = function (evt) {
                 db = this.result;
-                console.log('show_seenids: openDb Read DONE');
+                console.debug('show_seenids: openDb Read DONE');
                 var trans = db.transaction('uploads', 'readonly');
                 var store = trans.objectStore('uploads');
                 //var index = store.Index('uploadid');
@@ -476,19 +476,19 @@
                         cursor.continue();
                     } else {
                         // wird nicht aufgerufen
-                        console.log('show_seenids: No more entries!', ids);
+                        console.debug('show_seenids: No more entries!', ids);
                         //add_seen_marker();
                     }
                 };
                 store.openCursor(range, 'prevunique').onerror = function (event) {
-                    console.log('show_seenids: Db Read Error: ', event);
+                    console.debug('show_seenids: Db Read Error: ', event);
                 };
             };
             open.onerror = function (evt) {
-                console.log('openDb Error:', evt.target.errorCode);
+                console.debug('openDb Error:', evt.target.errorCode);
             };
             open.onupgradeneeded = function (evt) {
-                console.log('openDb.onupgradeneeded');
+                console.debug('openDb.onupgradeneeded');
                 var store = evt.target.result.createObjectStore('uploads', {keyPath: 'id'});
                 db = evt.target.result;
             };
@@ -585,24 +585,24 @@
             $.each(elements, function (idx, obj) {
                 var test = jQuery(obj.target);
                 var value = test[0].id || test[0].className;
-                console.log(value);
+                console.debug(value);
                 if (value.length > 12 && value.match('(item-comments)')) value = 'item-comments';
                 switch (value) {
                     case 'main-view':
-                        //console.log('header geladen');
+                        //console.debug('header geladen');
                         headerchange();
                         break;
                     case 'stream':
-                        //console.log('stream changed');
+                        //console.debug('stream changed');
                         streamchange();
                         break;
                     case 'item-container':
-                        console.log('neues Bild geöffnet');
+                        console.debug('neues Bild geöffnet');
                         commentschange();
                         imagechange();
                         break;
                     case 'item-comments':
-                        console.log('Comments geladen');
+                        console.debug('Comments geladen');
                         commentschange();
                         break;
                 }
@@ -715,15 +715,20 @@
     function imagechange() {
         var wrapper = $('.item-image-wrapper');
         wrapper[0].style.alignItems = 'center';
+
         wrapper.click(function (e) {
             if (e.target != this) return;
             $('.item-image:visible').click();
         });
+
         // bereits gesehen Markierung
         if ($('#brille').hasClass('active')) {
             saveid();
             //add_seen_marker();
         }
+
+        // Steuerelemente positionieren
+        console.warn($('.video-controls'));
 
         // + bei resized Bildern hinzufügen
         if (!$('.item-fullsize-link').length) {
@@ -737,7 +742,7 @@
         // Bild nicht zentrieren, wenn größer als Wrapper
         var mediaHeight = wrapper.find('.item-image').height();
         if (wrapper.height() < mediaHeight) {
-            console.log(wrapper);
+            console.debug(wrapper);
             wrapper[0].style.alignItems = 'flex-start';
         }
 
@@ -750,7 +755,7 @@
         // zum passenden Thumb scrollen
         var itemId = document.URL;
         var itemname = '#item-' + itemId.substring(itemId.lastIndexOf('/') + 1, itemId.length);
-        console.log(itemname);
+        console.debug(itemname);
         var posi = $(itemname).offset().top - 52;
         if ($(window).scrollTop() != posi) {
             //window.scrollTo(0, posi); //ohne Animation
@@ -772,7 +777,7 @@
 
         // Bereits gesehen Markierungen in den thumbs
         if ($('#brille').hasClass('active')) {
-            //console.log('streamchange_show_seenids');
+            //console.debug('streamchange_show_seenids');
             show_seenids();
         }
 
