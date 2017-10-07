@@ -20,7 +20,6 @@
 
     function waitForPage() {
         if (typeof p !== 'undefined') {
-
             // Verhindert Gewackel beim Scrollen
             p.View.Stream.Main.prototype.showItem = function ($item, scrollTo) {
 
@@ -93,6 +92,7 @@
             p.View.Stream.Main.prototype.loaded = function (items, position, error) {
                 this.itemsPerRow = p.mainView.thumbsPerRow;
                 this.$container.find('.loader').remove();
+
                 if (!items || !items.length) {
                     var msg = null;
                     var fm = null;
@@ -107,6 +107,7 @@
                     }
                     return;
                 }
+
                 if (position == p.Stream.POSITION.PREPEND) {
                     var prevHeight = $('#main-view').height();
                     var firstRow = this.$streamContainer.find('.stream-row:first');
@@ -125,19 +126,21 @@
                     var newHeight = $('#main-view').height() - (117 - 52);
                     //$(document).scrollTop($(document).scrollTop() + (newHeight - prevHeight));
                 } else if (position == p.Stream.POSITION.APPEND) {
-                    var lastRow = this.$streamContainer.find('.stream-row:last');
-                    var itemCount = lastRow.find('.thumb').length;
-                    var fill = 0;
-                    if (itemCount % this.itemsPerRow != 0) {
-                        var html = '';
-                        fill = this.itemsPerRow - itemCount;
-                        for (var i = 0; i < fill; i++) {
-                            html += this.buildItem(items[i]);
+                    if(this.$streamContainer) {
+                        var lastRow = this.$streamContainer.find('.stream-row:last');
+                        var itemCount = lastRow.find('.thumb').length;
+                        var fill = 0;
+                        if (itemCount % this.itemsPerRow != 0) {
+                            var html = '';
+                            fill = this.itemsPerRow - itemCount;
+                            for (var i = 0; i < fill; i++) {
+                                html += this.buildItem(items[i]);
+                            }
+                            lastRow.append(this.prepareThumbsForInsertion(html));
                         }
-                        lastRow.append(this.prepareThumbsForInsertion(html));
+                        var html = this.buildItemRows(items, fill, items.length, position);
+                        this.$streamContainer.append(this.prepareThumbsForInsertion(html));
                     }
-                    var html = this.buildItemRows(items, fill, items.length, position);
-                    this.$streamContainer.append(this.prepareThumbsForInsertion(html));
                 }
                 if (this.jumpToItem) {
                     var target = $('#item-' + this.jumpToItem);
@@ -727,9 +730,6 @@
             //add_seen_marker();
         }
 
-        // Steuerelemente positionieren
-        console.warn($('.video-controls'));
-
         // + bei resized Bildern hinzufügen
         if (!$('.item-fullsize-link').length) {
             var imgu = document.getElementsByClassName('item-image')[0];
@@ -853,13 +853,13 @@
 
         // assign default values for top and left properties
         if (!targ.style.left) {
-            targ.style.left = '0px'
+            targ.style.left = '0px';
         }
-        ;
+
         if (!targ.style.top) {
-            targ.style.top = '0px'
+            targ.style.top = '0px';
         }
-        ;
+
 
         // calculate integer values for top and left
         // properties
@@ -875,13 +875,11 @@
 
     function dragDiv(e) {
         if (!drag) {
-            return
+            return;
         }
-        ;
         if (!e) {
             var e = window.event
         }
-        ;
         // var targ=e.target?e.target:e.srcElement;
         // move div element
         targ.style.left = coordX + e.clientX - offsetX + 'px';
@@ -923,8 +921,10 @@
                         $('.item-image').unbind('click');
                         startDrag(e);
                     });
-                    $('.item-image').mouseup(function (e) {
-                        stopDrag(e);
+                    $(window).mouseup(function (e) {
+                        if(drag) {
+                            stopDrag(e);
+                        }
                     });
                 } else {
                     $('.item-image').unbind('mousedown');
@@ -1011,7 +1011,6 @@
         dingsda = document.getElementById('random');
         dingsda.setAttribute('href', 'http://pr0gramm.com/new/' + imageId);
     }
-
 
 // Custom Scrollbar
     var ssb = {
