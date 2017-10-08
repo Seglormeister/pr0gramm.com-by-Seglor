@@ -161,7 +161,7 @@
                 this.hasItems = true;
             };
 
-            p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?><?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?>  <video class="item-image" src="{item.image}" type="video/mp4" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <span class="pict vote-up">+</span> <span class="pict vote-down">-</span> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div> <?js if( item.user != p.user.name ) {?> <?js if(localStorage.getItem("commentview") == "wide") { ?> <span class="pict wide vote-fav{p.favClass(item.vote)}">*</span> <?js }else{ ?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?> <?js } ?> <div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div></div> ';
+            p.View.Stream.Item.prototype.template = '<div class="item-pointer"> </div> <?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-comments wide"></div> <?js }else{ ?> <div class="item-comments"></div> <?js } ?><?js if(localStorage.getItem("commentview") == "wide") { ?> <div class="item-container-content wide"> <?js }else{ ?> <div class="item-container-content"> <?js } ?> <?js if( p.user.admin ) {?> <svg class="flags flags-{item.flags}" viewBox="0 0 10 10"> <polygon points="0,0 10,0 0,10"></polygon> </svg> <?js } ?><div class="item-image-wrapper"> <?js if( item.video ) { ?>  <video class="item-image" src="{item.image}" type="video/mp4" autoplay loop></video> <div class="video-position-bar"> <div class="video-position-bar-background"> <div class="video-position"></div> </div> </div> <?js } else { ?> <img class="item-image" src="{item.image}"/> <?js if(item.fullsize) { ?> <a href="{item.fullsize}" target="_blank" class="item-fullsize-link">+</a> <?js } ?> <?js } ?> <div class="stream-prev pict">&lt;</div> <div class="stream-next pict">&gt;</div> </div> <div class="item-info"> <div class="item-vote{p.voteClass(item.vote)}"> <div><div><span class="pict vote-up">+</span> <span class="pict vote-down">-</span></div> <span class="score" title="{item.up} up, {item.down} down"><?js print(item.up - item.down)?></span><?js if( item.user != p.user.name ) {?> <span class="pict vote-fav{p.favClass(item.vote)}">*</span> <?js } ?></div><div><div class="ext-bar"><div class="ext-bar-item-up">&nbsp;</div><div class="ext-bar-item-down">&nbsp;</div></div><span class="ext-vote">{item.up} Up, {item.down} Down</span> </div></div> <div class="details-wrapper"><div class="item-details"> <a class="time" title="{item.date.readableTime()}" href="/new/{item.id}">{item.date.relativeTime(true)}</a> <span class="time">von</span> <a href="#user/{item.user}" class="user um{item.mark}">{item.user}</a> <span class="item-source"> <?js if( item.source ) {?> <span class="pict">s</span>&nbsp;<a href="{{item.source}}" target="_blank">{{item.source.hostName()}}</a> <?js } else { ?> <span class="pict">s</span>upload</span> <?js } ?> </span> <?js if( !item.video ) {?> <span class="item-google-search"> <span class="pict">g</span>&nbsp;<a href="https://www.google.com/searchbyimage?hl=en&amp;safe=off&amp;site=search&amp;image_url=http:{item.image}" target="_blank"> Bild googeln </a> </span> <?js } ?> <?js if( p.user.admin ) { ?> [<span class="action" id="item-delete" data-id="{item.id}">del</span>] [<a href="/new/phash.{item.id}.12">phash</a>] <?js } ?> <span class="flags flags-{item.flags}">{p.Stream.FLAG_NAME[item.flags]}</span></div> <div class="item-tags"></div></div> </div> <div class="divider-full-banner gpt" id="gpt-divider-banner" data-size="468x60" data-slot="pr0gramm-banner"></div> <div class="divider-large-rectangle gpt" id="gpt-divider-rectangle" data-size="336x280" data-slot="pr0gramm-rectangle"></div></div> ';
 
             p.View.Stream.Item = p.View.Stream.Item.extend({
                 show: function (rowIndex, itemData, defaultHeight, jumpToComment) {
@@ -272,7 +272,8 @@
 
     /****/// CSS
     var css = '#upload-form input[type="submit"] { position:relative; top: 420px; left: 350px; }' +
-        '.tags { padding-left:3px; width:100%;} div.item-tags { padding: 4px 0 8px 14% !important;} div.tagsinput { position:absolute; } input[value="Tags speichern"],input[value="Abbrechen"] { float:right; }' +
+        '.item-tags .tags { width:100%; } div.item-tags { display: inline-block; padding: 4px 0 8px 14% !important;} input[value="Tags speichern"],input[value="Abbrechen"] { display: inline-block; margin-left: 5px;}' +
+
         '.comments-large-rectangle { overflow: hidden; height:auto; position:px; width:292px; right:0;top:0; position:relative; } .comments-large-rectangle > a > img { width: 280px; } ' +
         '#footer-links {z-index:200;} div.item-tags { padding: 4px 0 8px 20%;} div.item-info { text-align:center;} ' +
         '#zahlbreite { color: #FFFFFF; margin: 27px 0 0 15px; float: left;} div.stream-row { clear:right; }' +
@@ -290,6 +291,17 @@
         '@media screen and (max-width:1400px){ div#head {margin: 0 0 0 0 !important;} ' +
         '.item-comments {width: 23% !important;}} ' +
         'div.item-details {padding: 8px 0px 8px 50px;}' +
+
+        // Image-Info
+        '.item-info { display: flex; padding: 10px 60px 20px 60px !important; flex-shrink:0;}'+
+        '.item-info .item-details {text-align:left;}'+
+        '.item-info > .item-vote { top: 0; left: 0; position: relative; }'+
+        '.details-wrapper {flex-grow: 1;}'+
+        '.details-wrapper .item-tags { width: 100%; padding: 8px 0px 8px 50px !important;text-align: left;}'+
+        '.item-vote > div:first-child {display: flex;}'+
+        '.item-details span.item-source {padding-left: 20px;}'+
+        '.item-info div.item-vote span.score {top: 0; left: 0; position: relative; margin: 0 0 0 10px;}'+
+        '.item-info .vote-fav { align-items: center; display: flex; margin-left: 20px; font-size: 25px !important;}'+
 
         '#head { padding-left: 0px !important; z-index:200; }' +
         '.stream-next { right: 10px !important; }' +
@@ -310,7 +322,6 @@
         'div.item-comments .second .wide { width: 100% !important;}' +
         'div.item-container-content.wide .item-image { max-width: 100% !important;}' +
 
-        'span.vote-fav.wide { left: 23% !important; top: 22% !important;}' +
         '.commentfarbe1 { border-left: 2px solid rgb(51, 52, 150) !important;}' +
         '.commentfarbe2 { border-left: 2px solid rgba(48, 221, 22, 0.72) !important;}' +
         '.commentfarbe3 { border-left: 2px solid rgba(254, 137, 6, 0.85) !important;}' +
@@ -320,10 +331,14 @@
 
         'div.comments-head { background: rgba(42, 46, 49, 0.62);}' +
         'div.comment { margin: 0px 0px 2px !important; padding-top: 5px; border: 1px solid rgba(10, 10, 11, 0.46); background: rgba(26, 27, 30, 0.7); border-radius: 2px;}' +
-        '.vote-fav { left: 23% !important; top: 30px !important;}' +
+        '.vote-fav { position: relative;left: 5px;top: 5px;}' +
         '.comments-large-rectangle { position:absolute; width: 0px;}' +
         '.side-wide-skyscraper { display:none;}' +
-        'form.tag-form { margin: 8px 70px 0px; width: 640px;}' +
+        'form.tag-form { display: none; }' +
+        'form.tag-form[style="display: block;"] { display: flex !important; max-width: 640px; height: 30px;}' +
+        'form.tag-form .tagsinput.item-tagsinput { height: auto; margin-bottom: 0; width: 100%;}' +
+        'form.tag-form .tagsinput-writebox.tagsinput-placeholder { padding: 0 !important; margin-bottom: 0; width: 100% !important;}' +
+        'form.tag-form:empty {background-color:red;}' +
         '.sorter, .sorter a { color: rgba(155, 155, 155, 1); font-size: 0.94em;}' +
         '#com-new { padding-left: 90px} #com-new, #com-top {  margin: 0px 3px;}' +
         '#com-new.active, #com-new:hover { color: #EE4D2E;} #com-top.active, #com-top:hover { color: #EE4D2E;}' +
@@ -350,10 +365,12 @@
         'div.item-container { margin-left: -' + viewPadding + ';padding-bottom: 0px !important; z-index: 2; background: rgba(0, 0, 0, 0.9) !important; position: fixed !important; display: flex; height: calc(100% - 52px) !important; width: 100% !important; }' +//'+highcontainer+'px
         'div.stream-row { clear: none !important; }' +
         '#main-view { max-width: 101% !important; width: 101% !important; }' +
-        '.user-info { padding: 16px 20px 0 16px; margin: 0 !important; }' +
+        '.user-info {height: 100%;margin: 0 15px 0 0;align-items: center; }' +
+        '.status-user .user-only, .status-guest .guest-only {display: flex;}' +
+        '.status-user div.user-only, .status-guest div.guest-only {display: flex;}' +
         '#pr0gramm-logo { margin-left: 15px !important; }' +
         '.item-pointer { display: none !important; }' +
-        'span.flags {margin-left: 120px; float: none !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}' +
+        'span.flags {margin-left: 20px; float: none !important; text-shadow: 0px 2px 3px rgb(5, 5, 5);}' +
         'span.flags-1 { color: #A7D713 !important; background-color: transparent !important;}' +
         'span.flags-2 { color: #F6AB09 !important; background-color: transparent !important;}' +
         'span.flags-4 { color: #E41B1B !important; background-color: transparent !important;}' +
@@ -367,11 +384,11 @@
         '#head-menu { left: 250px; position: absolute; display: flex; align-items: center; height: 100%; padding: 0 !important;}' +
         'div.in-pane { margin-left: -5px}' +
 
-        '#main-menu {float: left;display: flex;color: #fff;margin: 14px 0 0 10px;font-size: 22px;}'+
+        '#main-menu {float: left;display: flex;color: #fff;margin: 14px 0 0 15px;font-size: 22px;}'+
         '#main-menu:hover,#main-menu.active {color: #ee4d2e;}'+
         '#filter-menu { left: 318px !important;}' +
         '#footer-links {width: 250px; left: -250px !important;position: fixed;margin: 0;top: 52px;border-right: 3px solid rgb(42, 46, 49);background: #161618;transition: left .2s linear;}'+
-        '#footer-links.open { left: 0px !important;}' +
+        '#footer-links.open { left: 0px !important; box-shadow: 2px 0 10px #000;}' +
         '#footer-links a { color: #fff;display: block;text-align: left;padding: 10px 20px;margin-right: 0;font-size: 16px;}' +
         '#footer-links a:hover {color:#ee4d2e;}'+
         '#footer-links div:nth-child(2n) a { color: rgb(155, 155, 155);}' +
@@ -387,7 +404,7 @@
         '#footer-links a[href="/contact"]:before,' +
         '#footer-links a[href="http://app.pr0gramm.com"]:before, ' +
         '#footer-links a[href="https://twitter.com/pr0gramm"]:before'+
-        '{font-family: "FontAwesome"; margin-right: 10px;}'+
+        '{font-family: "FontAwesome"; margin-right: 10px; min-width: 20px; display: inline-block;}'+
 
         '#footer-links a[href="/faq"]:before { content: "\\f128"; }'+
         '#footer-links a[href="/contact"]:before { content: "\\f0e0"; }'+
@@ -401,7 +418,7 @@
         '.ssb_st {background: #2A2E31; height:100%; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);cursor:pointer;position:absolute;right:0;top:0;}' +
         '.ssb_up {display:none;cursor:pointer;position:absolute;right:0;top:0;}' +
 
-        '.ext-vote { color: #BBB; }' +
+        '.ext-vote { color: #BBB; white-space: nowrap;}' +
         '.ext-bar { overflow: hidden; padding-top: 5px; padding-bottom: 2px; }' +
         '.ext-bar div { height: 2px; float: left; transition: width 0.2s ease-out; }' +
 
@@ -583,7 +600,7 @@
         };
 
     label = document.createElement('div');
-    b.style.cssText = 'background-image: url("https://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 20px; display: inline-box; height: 20px; margin-left: 12px;';
+    b.style.cssText = 'background-image: url("https://i.imgur.com/7Q2UJeU.png"); background-repeat: no-repeat; background-size: contain; background-position: left; padding-left: 25px; display: inline-box; height: 20px; margin-left: 12px;';
     b.setAttribute('title', 'Dein Benis');
     b.className = 'benisdisplay';
     label.className = 'date-label';
